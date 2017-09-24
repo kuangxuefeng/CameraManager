@@ -3,12 +3,15 @@ package com.kxf.cameramanager;
 import android.app.Application;
 import android.content.SharedPreferences;
 import android.os.Build;
+import android.os.Environment;
 import android.util.Log;
 
 import com.kxf.cameramanager.utils.LogUtil;
 
 import org.xutils.DbManager;
 import org.xutils.x;
+
+import java.io.File;
 
 
 public class MyApplication extends Application {
@@ -93,5 +96,21 @@ public class MyApplication extends Application {
 
     public static String getShare(String key) {
         return getShare(key, "");
+    }
+
+    /**
+     * 获取SDCard的目录路径功能
+     *
+     * @return
+     */
+    public static String getSDCardPath() {
+        File sdcardDir = null;
+        // 判断SDCard是否存在
+        boolean sdcardExist = Environment.getExternalStorageState().equals(
+                android.os.Environment.MEDIA_MOUNTED);
+        if (sdcardExist) {
+            sdcardDir = Environment.getExternalStorageDirectory();
+        }
+        return sdcardDir.toString();
     }
 }

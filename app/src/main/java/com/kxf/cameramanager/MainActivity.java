@@ -8,7 +8,6 @@ import android.graphics.PixelFormat;
 import android.hardware.Camera;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Environment;
 import android.text.TextUtils;
 import android.view.SurfaceHolder;
 import android.view.View;
@@ -46,12 +45,13 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
 
         @Override
         public void onPictureTaken(byte[] data, Camera camera) {
-            myCamera.stopPreview();
             try {// 获得图片
                 bmDG = BitmapFactory.decodeByteArray(data, 0, data.length);
                 LogUtil.e("bmDG=" + bmDG);
                 if (isSavePic){
                     saveImage(bmDG);
+                }else {
+                    myCamera.stopPreview();
                 }
             } catch (Exception e) {
                 e.printStackTrace();
@@ -160,10 +160,11 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
                     myCamera.autoFocus(this);
                 }
                 isSavePic = true;
-                myCamera.startPreview();
                 isStopPreview = false;
                 break;
             case R.id.btn_back:
+                break;
+            case R.id.btn_next:
                 break;
             default:
                 break;
@@ -228,29 +229,12 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
             e.printStackTrace();
         }
         initImage(filepath);
+        myCamera.startPreview();
     }
 
     private String getBasePath() {
-        String savePath = getSDCardPath() + "/DCIM/feng";// /feng/ScreenImage
-        // /DCIM/Camera
-        // camera
+        String savePath = MyApplication.getSDCardPath() + "/DCIM/feng";// /feng/ScreenImage
         return savePath;
-    }
-
-    /**
-     * 获取SDCard的目录路径功能
-     *
-     * @return
-     */
-    private String getSDCardPath() {
-        File sdcardDir = null;
-        // 判断SDCard是否存在
-        boolean sdcardExist = Environment.getExternalStorageState().equals(
-                android.os.Environment.MEDIA_MOUNTED);
-        if (sdcardExist) {
-            sdcardDir = Environment.getExternalStorageDirectory();
-        }
-        return sdcardDir.toString();
     }
 
 }

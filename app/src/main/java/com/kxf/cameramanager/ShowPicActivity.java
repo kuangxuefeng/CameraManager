@@ -43,10 +43,11 @@ public class ShowPicActivity extends BaseActivity implements View.OnClickListene
         btn_back.setOnClickListener(this);
         btn_next.setOnClickListener(this);
 
+        updateFiles();
         updateView();
     }
 
-    private void updateView() {
+    private void updateFiles(){
         String SavePath = getBasePath();
         File path = new File(SavePath);
         fs = path.listFiles();
@@ -56,6 +57,11 @@ public class ShowPicActivity extends BaseActivity implements View.OnClickListene
             Collections.reverse(ls);
             fs = ls.toArray(new File[0]);
             ls = null;
+        }
+    }
+
+    private void updateView() {
+        if (null != fs && fs.length>0){
             iv_center.setImageURI(Uri.fromFile(fs[index]));
             if ((index - 1)>=0){
                 iv_left1.setImageURI(Uri.fromFile(fs[index - 1]));

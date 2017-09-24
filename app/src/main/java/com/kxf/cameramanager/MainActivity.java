@@ -1,5 +1,6 @@
 package com.kxf.cameramanager;
 
+import android.content.Intent;
 import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -165,6 +166,8 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
             case R.id.btn_back:
                 break;
             case R.id.btn_next:
+                Intent intent = new Intent(this, ShowPicActivity.class);
+                startActivity(intent);
                 break;
             default:
                 break;

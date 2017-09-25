@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context="com.kxf.cameramanager.LoginActivity">
+    <SearchView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+    </SearchView>
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <LinearLayout
+            android:id="@+id/ll_user_list"
+            android:layout_width="match_parent"
+            android:orientation="vertical"
+            android:layout_height="match_parent">
+            <LinearLayout
+                android:id="@+id/ll_user_item"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:layout_width="50dp"
+                    android:layout_height="match_parent"
+                    android:src="@android:drawable/ic_menu_myplaces" />
+                <TextView
+                    android:id="@+id/tv_user_name"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="match_parent"
+                    android:gravity="center_vertical"
+                    android:text="姓名:张三"/>
+                <TextView
+                    android:id="@+id/tv_user_age"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="match_parent"
+                    android:gravity="center_vertical"
+                    android:text="年龄:22"/>
+                <TextView
+                    android:id="@+id/tv_user_tel"
+                    android:layout_width="0dp"
+                    android:layout_weight="2"
+                    android:layout_height="match_parent"
+                    android:gravity="center_vertical"
+                    android:text="电话:18121212121"/>
+
+                <ImageView
+                    android:id="@+id/iv_user_sure"
+                    android:layout_width="50dp"
+                    android:layout_height="match_parent"
+                    android:src="@android:drawable/checkbox_on_background" />
+                <ImageView
+                    android:id="@+id/iv_user_delete"
+                    android:layout_width="50dp"
+                    android:layout_height="match_parent"
+                    android:src="@android:drawable/ic_delete"/>
+            </LinearLayout>
+        </LinearLayout>
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_alignParentBottom="true">
+
+            <ImageView
+                android:id="@+id/iv_user_add"
+                android:layout_width="100dp"
+                android:layout_height="match_parent"
+                android:layout_centerInParent="true"
+                android:scaleType="fitXY"
+                android:src="@android:drawable/ic_input_add" />
+
+            <ImageView
+                android:id="@+id/iv_user_last"
+                android:layout_width="100dp"
+                android:layout_height="match_parent"
+                android:layout_toLeftOf="@+id/iv_user_add"
+                android:src="@android:drawable/ic_media_previous" />
+            <ImageView
+                android:id="@+id/iv_user_next"
+                android:layout_width="100dp"
+                android:layout_height="match_parent"
+                android:layout_toRightOf="@+id/iv_user_add"
+                android:src="@android:drawable/ic_media_next" />
+        </RelativeLayout>
+    </RelativeLayout>
+</LinearLayout>

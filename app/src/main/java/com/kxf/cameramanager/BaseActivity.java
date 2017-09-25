@@ -13,6 +13,7 @@ import android.text.TextUtils;
 import android.view.Window;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.kxf.cameramanager.utils.FormatUtils;
@@ -142,6 +143,10 @@ public class BaseActivity extends Activity {
 
     protected void showDialogYes(String msg){
         showDialog(msg, "确定", null, null, null);
+    }
+
+    protected void showToast(String msg){
+        Toast.makeText(this, msg, Toast.LENGTH_SHORT).show();
     }
 
 }

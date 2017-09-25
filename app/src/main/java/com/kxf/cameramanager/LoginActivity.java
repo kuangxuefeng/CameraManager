@@ -98,19 +98,6 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
         } catch (DbException e) {
             e.printStackTrace();
         }
-        if (null == us || us.size() < 1){
-            for (int i=0;i<23;i++){
-                User u = new User();
-                u.setName("tom" + i);
-                u.setAge(4*i);
-                u.setTel("130000000" + i);
-                try {
-                    MyApplication.db().save(u);
-                } catch (DbException e) {
-                    e.printStackTrace();
-                }
-            }
-        }
     }
 
     private void initView() {

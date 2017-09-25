@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.google.gson.Gson;
@@ -15,6 +16,8 @@ import org.xutils.db.sqlite.WhereBuilder;
 import org.xutils.ex.DbException;
 
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class LoginActivity extends BaseActivity implements View.OnClickListener {
 
@@ -23,18 +26,31 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
     private int page = 1;
     private List<User> us = null;
     private ImageView iv_user_add, iv_user_last, iv_user_next;
+    private boolean isCanClick = true;
+    private ProgressBar load_pb;
     private OnItemClickListener listener = new OnItemClickListener() {
         @Override
         public void onItemClick(View v, int itemId) {
             final User u = us.get(itemId);
             switch (v.getId()){
                 case R.id.iv_user_sure:
-                    Gson gson = new Gson();
-                    String ustr = gson.toJson(u);
-                    MyApplication.saveShare(KEY_USER_LOGIN, ustr);
-                    Intent intent = new Intent(mActivity, MainActivity.class);
-                    startActivity(intent);
-                    finish();
+                    if (isCanClick){
+                        isCanClick = false;
+                        load_pb.setVisibility(View.VISIBLE);
+                        Timer timer = new Timer();
+                        timer.schedule(new TimerTask() {
+                            @Override
+                            public void run() {
+                                Gson gson = new Gson();
+                                String ustr = gson.toJson(u);
+                                MyApplication.saveShare(KEY_USER_LOGIN, ustr);
+                                Intent intent = new Intent(mActivity, MainActivity.class);
+                                startActivity(intent);
+                                finish();
+                                isCanClick = true;
+                            }
+                        }, 500);
+                    }
                     break;
                 case R.id.iv_user_delete:
                     showDialog("是否删除？", "否", null, "是", new Runnable() {
@@ -109,6 +125,8 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
         iv_user_next.setOnClickListener(this);
 
         ll_user_list = (LinearLayout) findViewById(R.id.ll_user_list);
+        load_pb = (ProgressBar) findViewById(R.id.load_pb);
+        load_pb.setVisibility(View.GONE);
     }
 
     private void addItem(ViewGroup parent, User u, int itemId) {
@@ -127,9 +145,14 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
     private View.OnClickListener getLister(final OnItemClickListener listener, final int itemId) {
         View.OnClickListener lis = new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
+            public void onClick(final View v) {
                 if (null != listener) {
-                    listener.onItemClick(v, itemId);
+                    mActivity.runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            listener.onItemClick(v, itemId);
+                        }
+                    });
                 }
             }
         };

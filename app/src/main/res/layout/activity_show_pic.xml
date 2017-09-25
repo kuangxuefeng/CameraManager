@@ -1,84 +1,95 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
     tools:context="com.kxf.cameramanager.ShowPicActivity">
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:orientation="horizontal"
-        android:layout_margin="5dp"
-        android:layout_weight="4">
-        <ImageView
-            android:id="@+id/iv_left2"
-            android:layout_width="0dp"
-            android:layout_weight="1"
-            android:layout_height="match_parent" />
-        <ImageView
-            android:id="@+id/iv_left1"
-            android:layout_width="0dp"
-            android:layout_weight="1"
-            android:layout_height="match_parent" />
-        <ImageView
-            android:id="@+id/iv_center"
-            android:layout_width="0dp"
-            android:layout_weight="3"
-            android:scaleType="fitXY"
-            android:layout_height="match_parent" />
-        <ImageView
-            android:id="@+id/iv_right1"
-            android:layout_width="0dp"
-            android:layout_weight="1"
-            android:layout_height="match_parent" />
-        <ImageView
-            android:id="@+id/iv_right2"
-            android:layout_width="0dp"
-            android:layout_weight="1"
-            android:layout_height="match_parent" />
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:orientation="horizontal"
+            android:layout_margin="5dp"
+            android:layout_weight="4">
+            <ImageView
+                android:id="@+id/iv_left2"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="match_parent" />
+            <ImageView
+                android:id="@+id/iv_left1"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="match_parent" />
+            <ImageView
+                android:id="@+id/iv_center"
+                android:layout_width="0dp"
+                android:layout_weight="3"
+                android:scaleType="fitXY"
+                android:layout_height="match_parent" />
+            <ImageView
+                android:id="@+id/iv_right1"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="match_parent" />
+            <ImageView
+                android:id="@+id/iv_right2"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="match_parent" />
+        </LinearLayout>
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1">
+            <Button
+                android:id="@+id/btn_out"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:text="导出"/>
+            <Button
+                android:id="@+id/btn_delete"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="删除"
+                android:layout_toLeftOf="@+id/btn_out"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
+                android:layout_centerVertical="true" />
+            <Button
+                android:id="@+id/btn_last"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="上一个"
+                android:layout_toLeftOf="@+id/btn_delete"
+                android:layout_centerVertical="true" />
+            <Button
+                android:id="@+id/btn_back"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="返回"
+                android:layout_toRightOf="@+id/btn_out"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
+                android:layout_centerVertical="true" />
+            <Button
+                android:id="@+id/btn_next"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="下一个"
+                android:layout_toRightOf="@+id/btn_back"
+                android:layout_centerVertical="true" />
+        </RelativeLayout>
     </LinearLayout>
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1">
-        <Button
-            android:id="@+id/btn_out"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            android:text="导出"/>
-        <Button
-            android:id="@+id/btn_delete"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="删除"
-            android:layout_toLeftOf="@+id/btn_out"
-            android:layout_marginLeft="20dp"
-            android:layout_marginRight="20dp"
-            android:layout_centerVertical="true" />
-        <Button
-            android:id="@+id/btn_last"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="上一个"
-            android:layout_toLeftOf="@+id/btn_delete"
-            android:layout_centerVertical="true" />
-        <Button
-            android:id="@+id/btn_back"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="返回"
-            android:layout_toRightOf="@+id/btn_out"
-            android:layout_marginLeft="20dp"
-            android:layout_marginRight="20dp"
-            android:layout_centerVertical="true" />
-        <Button
-            android:id="@+id/btn_next"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="下一个"
-            android:layout_toRightOf="@+id/btn_back"
-            android:layout_centerVertical="true" />
-    </RelativeLayout>
-</LinearLayout>
+    <ProgressBar
+        android:id="@+id/load_pb"
+        android:visibility="gone"
+        style="?android:attr/progressBarStyle"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_centerInParent="true" />
+</RelativeLayout>

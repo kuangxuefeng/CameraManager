@@ -25,8 +25,9 @@ import java.util.Date;
 import java.util.List;
 
 public class MainActivity extends BaseActivity implements View.OnClickListener, Camera.AutoFocusCallback {
-    Button btn_dingge, btn_save, btn_next, btn_back;
-    ImageView iv_show;
+    private Button btn_dingge, btn_save, btn_next, btn_back;
+    private ImageView iv_show;
+    private int indexShow = 0;
     SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/ddHH:mm:ss");
     SimpleDateFormat sdfFile = new SimpleDateFormat("MMddHHmmss");
 
@@ -34,12 +35,12 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
     private int imageW = 640;
     private int imageH = 480;
 
-    MySurfaceView mySurface;// surfaceView声明
-    SurfaceHolder holder;// surfaceHolder声明
-    Camera myCamera;// 相机声明
-    boolean isSavePic = false;
-    boolean isStopPreview = false;
-    Bitmap bmDG;
+    private MySurfaceView mySurface;// surfaceView声明
+    private SurfaceHolder holder;// surfaceHolder声明
+    private Camera myCamera;// 相机声明
+    private boolean isSavePic = false;
+    private boolean isStopPreview = false;
+    private Bitmap bmDG;
 
     // 创建jpeg图片回调数据对象
     Camera.PictureCallback jpeg = new Camera.PictureCallback() {
@@ -68,6 +69,8 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
             File[] fs = path.listFiles();
             if (null != fs && fs.length > 0){
                 iv_show.setImageURI(Uri.fromFile(fs[fs.length - 1]));
+            }else {
+                iv_show.setImageURI(null);
             }
         }else {
             iv_show.setImageURI(Uri.fromFile(new File(filePath)));
@@ -81,7 +84,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
 
         mySurface = (MySurfaceView) findViewById(R.id.my_camera);
         iv_show = (ImageView) findViewById(R.id.iv_show);
-        initImage(null);
+        iv_show.setOnClickListener(this);
         btn_back = (Button) findViewById(R.id.btn_back);
         btn_dingge = (Button) findViewById(R.id.btn_dingge);
         btn_save = (Button) findViewById(R.id.btn_save);
@@ -141,7 +144,14 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
     }
 
     @Override
+    protected void onResume() {
+        super.onResume();
+        initImage(null);
+    }
+
+    @Override
     public void onClick(View v) {
+        Intent intent;
         switch (v.getId()) {
 //            case R.id.my_camera:
             case R.id.btn_dingge:
@@ -164,10 +174,25 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
                 isStopPreview = false;
                 break;
             case R.id.btn_back:
+                intent = new Intent(this, LoginActivity.class);
+                startActivity(intent);
+                finish();
                 break;
             case R.id.btn_next:
-                Intent intent = new Intent(this, ShowPicActivity.class);
+                intent = new Intent(this, ShowPicActivity.class);
                 startActivity(intent);
+                break;
+            case R.id.iv_show:
+                String dirPath = getBasePath();
+                File path = new File(dirPath);
+                File[] fs = path.listFiles();
+                if (null != fs && fs.length > 0){
+                    indexShow ++;
+                    if (indexShow>=fs.length){
+                        indexShow = 0;
+                    }
+                    initImage(fs[fs.length - indexShow -1].getPath());
+                }
                 break;
             default:
                 break;

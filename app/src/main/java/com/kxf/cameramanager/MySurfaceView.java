@@ -7,6 +7,8 @@ import android.util.AttributeSet;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
+import com.kxf.cameramanager.utils.LogUtil;
+
 import java.io.IOException;
 
 public class MySurfaceView extends SurfaceView implements
@@ -44,6 +46,7 @@ public class MySurfaceView extends SurfaceView implements
 
 	@Override
 	public void surfaceCreated(SurfaceHolder holder) {
+		LogUtil.d("surfaceCreated(SurfaceHolder holder)");
         isBackCamera = !isBackCamera;
 		// TODO Auto-generated method stub
 		if (myCamera == null) {
@@ -67,6 +70,7 @@ public class MySurfaceView extends SurfaceView implements
 	@Override
 	public void surfaceChanged(SurfaceHolder holder, int format, int width,
 			int height) {
+		LogUtil.d("surfaceChanged");
 		myCamera.startPreview();
 		if (null!=myCallBack) {
 			myCallBack.mySurfaceChanged(holder, format, width, height);
@@ -75,7 +79,7 @@ public class MySurfaceView extends SurfaceView implements
 
 	@Override
 	public void surfaceDestroyed(SurfaceHolder holder) {
-		// TODO Auto-generated method stub
+		LogUtil.d("surfaceDestroyed(SurfaceHolder holder)");
 		myCamera.stopPreview();// ֹͣԤ��
 		myCamera.release();// �ͷ������Դ
 		myCamera = null;

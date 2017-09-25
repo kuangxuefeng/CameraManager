@@ -1,6 +1,6 @@
 package com.kxf.cameramanager;
 
-import android.net.Uri;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -62,26 +62,26 @@ public class ShowPicActivity extends BaseActivity implements View.OnClickListene
 
     private void updateView() {
         if (null != fs && fs.length>0){
-            iv_center.setImageURI(Uri.fromFile(fs[index]));
+            iv_center.setImageBitmap(BitmapFactory.decodeFile(fs[index].getPath()));
             if ((index - 1)>=0){
-                iv_left1.setImageURI(Uri.fromFile(fs[index - 1]));
+                iv_left1.setImageBitmap(BitmapFactory.decodeFile(fs[index - 1].getPath()));
             }else {
-                iv_left1.setImageURI(null);
+                iv_left1.setImageBitmap(null);
             }
             if ((index - 2)>=0){
-                iv_left2.setImageURI(Uri.fromFile(fs[index - 2]));
+                iv_left2.setImageBitmap(BitmapFactory.decodeFile(fs[index - 2].getPath()));
             }else {
-                iv_left2.setImageURI(null);
+                iv_left2.setImageBitmap(null);
             }
             if ((index + 1)<fs.length){
-                iv_right1.setImageURI(Uri.fromFile(fs[index + 1]));
+                iv_right1.setImageBitmap(BitmapFactory.decodeFile(fs[index + 1].getPath()));
             }else {
-                iv_right1.setImageURI(null);
+                iv_right1.setImageBitmap(null);
             }
             if ((index + 2)<fs.length){
-                iv_right2.setImageURI(Uri.fromFile(fs[index + 2]));
+                iv_right2.setImageBitmap(BitmapFactory.decodeFile(fs[index + 2].getPath()));
             }else {
-                iv_right2.setImageURI(null);
+                iv_right2.setImageBitmap(null);
             }
         }
     }

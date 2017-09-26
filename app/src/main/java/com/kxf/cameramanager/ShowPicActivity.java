@@ -1,7 +1,10 @@
 package com.kxf.cameramanager;
 
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.BitmapFactory;
+import android.hardware.usb.UsbDevice;
+import android.hardware.usb.UsbManager;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -14,7 +17,10 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 
 public class ShowPicActivity extends BaseActivity implements View.OnClickListener, FileChooseDialog.onFileChooseListener {
@@ -104,6 +110,7 @@ public class ShowPicActivity extends BaseActivity implements View.OnClickListene
         Intent intent;
         switch (v.getId()){
             case R.id.btn_out:
+                findUsb();
                 FileChooseDialog fd = new FileChooseDialog(this, R.style.Dialog_Fullscreen);
                 fd.setListener(this);
                 fd.setPathRoot(MyApplication.getSDCardPath());
@@ -236,5 +243,31 @@ public class ShowPicActivity extends BaseActivity implements View.OnClickListene
 
         }
 
+    }
+
+    private void findUsb(){
+        // 获取USB设备
+        UsbManager manager = (UsbManager) getSystemService(Context.USB_SERVICE);
+        if (manager == null) {
+            return;
+        } else {
+            LogUtil.i("usb设备：" + String.valueOf(manager.toString()));
+        }
+        HashMap<String, UsbDevice> deviceList = manager.getDeviceList();
+        LogUtil.i("usb设备：" + String.valueOf(deviceList.size()));
+        Iterator<UsbDevice> deviceIterator = deviceList.values().iterator();
+        ArrayList<String> USBDeviceList = new ArrayList<String>(); // 存放USB设备的数量
+        while (deviceIterator.hasNext()) {
+            UsbDevice device = deviceIterator.next();
+
+            USBDeviceList.add(String.valueOf(device.getVendorId()));
+            USBDeviceList.add(String.valueOf(device.getProductId()));
+
+            // 在这里添加处理设备的代码
+            if (device.getVendorId() == 1155 && device.getProductId() == 22352) {
+                LogUtil.i("找到设备 device=" + device);
+            }
+        }
+        LogUtil.d("USBDeviceList=" + USBDeviceList);
     }
 }

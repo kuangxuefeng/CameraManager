@@ -116,7 +116,7 @@ public class BaseActivity extends Activity {
                 AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
                 builder.setMessage(FormatUtils.FormatStringLen(msg, 50, FormatUtils.ALIGN.CENTER, " ")).setCancelable(false).setTitle("提示");
                 if (!TextUtils.isEmpty(leftButtonTitle)){
-                    builder.setPositiveButton(leftButtonTitle, new DialogInterface.OnClickListener() {
+                    builder.setNeutralButton(leftButtonTitle, new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
                             if(null != leftRun){
@@ -126,7 +126,7 @@ public class BaseActivity extends Activity {
                     });
                 }
                 if (!TextUtils.isEmpty(rightButtonTitle)){
-                    builder.setNeutralButton(rightButtonTitle, new DialogInterface.OnClickListener() {
+                    builder.setPositiveButton(rightButtonTitle, new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
                             if(null != rightRun){

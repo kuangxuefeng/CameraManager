@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
@@ -28,6 +29,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
     private ImageView iv_user_add, iv_user_last, iv_user_next;
     private boolean isCanClick = true;
     private ProgressBar load_pb;
+    private Button btn_bt;
     private OnItemClickListener listener = new OnItemClickListener() {
         @Override
         public void onItemClick(View v, int itemId) {
@@ -124,6 +126,9 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
         iv_user_last.setOnClickListener(this);
         iv_user_next.setOnClickListener(this);
 
+        btn_bt = (Button) findViewById(R.id.btn_bt);
+        btn_bt.setOnClickListener(this);
+
         ll_user_list = (LinearLayout) findViewById(R.id.ll_user_list);
         load_pb = (ProgressBar) findViewById(R.id.load_pb);
         load_pb.setVisibility(View.GONE);
@@ -177,6 +182,10 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
                     page++;
                     initUserView();
                 }
+                break;
+            case R.id.btn_bt:
+                intent = new Intent(this, BTClientActivity.class);
+                startActivity(intent);
                 break;
         }
     }

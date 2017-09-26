@@ -63,6 +63,8 @@
                 android:layout_height="match_parent" />
             <EditText
                 android:id="@+id/et_user_tel"
+                android:inputType="number"
+                android:maxLength="11"
                 android:layout_marginLeft="20dp"
                 android:layout_width="0dp"
                 android:layout_weight="3"
@@ -81,6 +83,8 @@
                 android:layout_height="match_parent" />
             <EditText
                 android:id="@+id/et_user_age"
+                android:inputType="number"
+                android:maxLength="2"
                 android:layout_marginLeft="20dp"
                 android:layout_width="0dp"
                 android:layout_weight="3"

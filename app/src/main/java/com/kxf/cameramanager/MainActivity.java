@@ -82,6 +82,12 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        if (isWindowChanged){
+            initView();
+        }
+    }
+
+    private void initView() {
         mySurface = (MySurfaceView) findViewById(R.id.my_camera);
         iv_show = (ImageView) findViewById(R.id.iv_show);
         iv_show.setOnClickListener(this);
@@ -146,7 +152,9 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
     @Override
     protected void onResume() {
         super.onResume();
-        initImage(null);
+        if (isWindowChanged){
+            initImage(null);
+        }
     }
 
     @Override

@@ -35,9 +35,10 @@ public class ShowPicActivity extends BaseActivity implements View.OnClickListene
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_show_pic);
-
-        initView();
+        if(isWindowChanged){
+            setContentView(R.layout.activity_show_pic);
+            initView();
+        }
     }
 
     private void initView() {

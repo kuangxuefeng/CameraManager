@@ -12,6 +12,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.google.gson.Gson;
+import com.kxf.cameramanager.utils.LogUtil;
 
 import org.xutils.db.sqlite.WhereBuilder;
 import org.xutils.ex.DbException;
@@ -86,14 +87,18 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
-        initView();
+        if (isWindowChanged){
+            initView();
+        }
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        initUser();
-        initUserView();
+        if (isWindowChanged){
+            initUser();
+            initUserView();
+        }
     }
 
     private void initUserView() {
@@ -184,6 +189,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
                 }
                 break;
             case R.id.btn_bt:
+                LogUtil.e("intent = new Intent(this, BTClientActivity.class);");
                 intent = new Intent(this, BTClientActivity.class);
                 startActivity(intent);
                 break;

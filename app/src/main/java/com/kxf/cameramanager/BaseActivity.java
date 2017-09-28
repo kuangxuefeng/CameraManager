@@ -6,6 +6,7 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.pm.ActivityInfo;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -16,6 +17,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonSyntaxException;
 import com.kxf.cameramanager.utils.FormatUtils;
 import com.kxf.cameramanager.utils.LogUtil;
 
@@ -34,6 +36,7 @@ public class BaseActivity extends Activity {
 
     private boolean isNeedAdapta = true;
     public static final int msg_show_dialog = 2000;
+    public boolean isWindowChanged = false;
     protected final Handler handlerBase = new Handler() {
         @Override
         public void handleMessage(Message msg) {
@@ -51,17 +54,25 @@ public class BaseActivity extends Activity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+        super.onCreate(savedInstanceState);
+        LogUtil.e("this.getResources().getConfiguration().orientation=" + this.getResources().getConfiguration().orientation);
+        isWindowChanged = (this.getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE);
         mActivity = this;
         mContext = this;
         tag = this.getPackageName() + "." + this.getLocalClassName();
         tag = "do in " + tag;
         LogUtil.e(tag);
-        String userStr = MyApplication.getShare(KEY_USER_LOGIN);
-        Gson gson = new Gson();
-        userLogin = gson.fromJson(userStr, User.class);
+        if (isWindowChanged){
+            try {
+                String userStr = MyApplication.getShare(KEY_USER_LOGIN);
+                Gson gson = new Gson();
+                userLogin = gson.fromJson(userStr, User.class);
+            } catch (JsonSyntaxException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     @Override
@@ -102,6 +113,10 @@ public class BaseActivity extends Activity {
 
     @Override
     public void finish() {
+        if (null != dialog && dialog.isShowing()){
+            dialog.dismiss();
+        }
+        dialog = null;
         super.finish();
         LogUtil.e(tag);
     }
@@ -113,6 +128,8 @@ public class BaseActivity extends Activity {
                 if (null != dialog && dialog.isShowing()){
                     dialog.dismiss();
                 }
+                dialog = null;
+
                 AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
                 builder.setMessage(FormatUtils.FormatStringLen(msg, 50, FormatUtils.ALIGN.CENTER, " ")).setCancelable(false).setTitle("提示");
                 if (!TextUtils.isEmpty(leftButtonTitle)){
@@ -145,8 +162,13 @@ public class BaseActivity extends Activity {
         showDialog(msg, "确定", null, null, null);
     }
 
-    protected void showToast(String msg){
-        Toast.makeText(this, msg, Toast.LENGTH_SHORT).show();
+    protected void showToast(final String msg){
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                Toast.makeText(mContext, msg, Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
 }

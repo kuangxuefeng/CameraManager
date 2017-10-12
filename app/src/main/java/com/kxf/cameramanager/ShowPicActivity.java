@@ -27,9 +27,12 @@ public class ShowPicActivity extends BaseActivity implements View.OnClickListene
 
     private static final int FILE_SELECT_CODE = 500;
     private ImageView iv_left2, iv_left1, iv_center, iv_right1, iv_right2;
+    private ImageView iv_left2_r, iv_left1_r, iv_center_r, iv_right1_r, iv_right2_r;
     private Button btn_out, btn_delete, btn_last, btn_back, btn_next;
+    private Button btn_delete_r, btn_last_r, btn_next_r;
     private ProgressBar load_pb;
     private int index = 0;
+    private int index_r = 0;
     private File[] fs;
 
     @Override
@@ -49,11 +52,21 @@ public class ShowPicActivity extends BaseActivity implements View.OnClickListene
         iv_right1 = (ImageView) findViewById(R.id.iv_right1);
         iv_right2 = (ImageView) findViewById(R.id.iv_right2);
 
+        iv_left2_r = (ImageView) findViewById(R.id.iv_left2_r);
+        iv_left1_r = (ImageView) findViewById(R.id.iv_left1_r);
+        iv_center_r = (ImageView) findViewById(R.id.iv_center_r);
+        iv_right1_r = (ImageView) findViewById(R.id.iv_right1_r);
+        iv_right2_r = (ImageView) findViewById(R.id.iv_right2_r);
+
         btn_out = (Button) findViewById(R.id.btn_out);
         btn_delete = (Button) findViewById(R.id.btn_delete);
         btn_last = (Button) findViewById(R.id.btn_last);
         btn_back = (Button) findViewById(R.id.btn_back);
         btn_next = (Button) findViewById(R.id.btn_next);
+
+        btn_delete_r = (Button) findViewById(R.id.btn_delete_r);
+        btn_last_r = (Button) findViewById(R.id.btn_last_r);
+        btn_next_r = (Button) findViewById(R.id.btn_next_r);
 
         btn_out.setOnClickListener(this);
         btn_delete.setOnClickListener(this);
@@ -61,8 +74,13 @@ public class ShowPicActivity extends BaseActivity implements View.OnClickListene
         btn_back.setOnClickListener(this);
         btn_next.setOnClickListener(this);
 
+        btn_delete_r.setOnClickListener(this);
+        btn_last_r.setOnClickListener(this);
+        btn_next_r.setOnClickListener(this);
+
         updateFiles();
         updateView();
+        updateView_r();
     }
 
     private void updateFiles(){
@@ -106,6 +124,34 @@ public class ShowPicActivity extends BaseActivity implements View.OnClickListene
         }
     }
 
+    private void updateView_r() {
+        if (null != fs && fs.length>0){
+            iv_center_r.setImageBitmap(BitmapFactory.decodeFile(fs[index_r].getPath()));
+            if ((index_r - 1)>=0){
+                iv_left1_r.setImageBitmap(BitmapFactory.decodeFile(fs[index_r - 1].getPath()));
+            }else {
+                iv_left1_r.setImageBitmap(null);
+            }
+            if ((index_r - 2)>=0){
+                iv_left2_r.setImageBitmap(BitmapFactory.decodeFile(fs[index_r - 2].getPath()));
+            }else {
+                iv_left2_r.setImageBitmap(null);
+            }
+            if ((index_r + 1)<fs.length){
+                iv_right1_r.setImageBitmap(BitmapFactory.decodeFile(fs[index_r + 1].getPath()));
+            }else {
+                iv_right1_r.setImageBitmap(null);
+            }
+            if ((index_r + 2)<fs.length){
+                iv_right2_r.setImageBitmap(BitmapFactory.decodeFile(fs[index_r + 2].getPath()));
+            }else {
+                iv_right2_r.setImageBitmap(null);
+            }
+        }else {
+            iv_center_r.setImageBitmap(null);
+        }
+    }
+
     @Override
     public void onClick(View v) {
         Intent intent;
@@ -118,17 +164,43 @@ public class ShowPicActivity extends BaseActivity implements View.OnClickListene
                 fd.show();
                 break;
             case R.id.btn_delete:
-                fs[index].delete();
-                if (index>0){
-                    index --;
+                if (null != fs && fs.length > 0 && index<fs.length){
+                    fs[index].delete();
+                    if (index>0){
+                        index --;
+                    }
+                    updateFiles();
+                    if (index_r>0 && null != fs && index_r >= fs.length){
+                        index_r --;
+                    }
+                    updateView();
+                    updateView_r();
                 }
-                updateFiles();
-                updateView();
+                break;
+            case R.id.btn_delete_r:
+                if (null != fs && fs.length > 0 && index_r<fs.length){
+                    fs[index_r].delete();
+                    if (index_r>0){
+                        index_r --;
+                    }
+                    updateFiles();
+                    if (index>0 && null != fs && index >= fs.length){
+                        index --;
+                    }
+                    updateView();
+                    updateView_r();
+                }
                 break;
             case R.id.btn_last:
                 if ((index - 1)>-1){
                     index -= 1;
                     updateView();
+                }
+                break;
+            case R.id.btn_last_r:
+                if ((index_r - 1)>-1){
+                    index_r -= 1;
+                    updateView_r();
                 }
                 break;
             case R.id.btn_back:
@@ -138,6 +210,12 @@ public class ShowPicActivity extends BaseActivity implements View.OnClickListene
                 if (null != fs && (index + 1)<fs.length){
                     index += 1;
                     updateView();
+                }
+                break;
+            case R.id.btn_next_r:
+                if (null != fs && (index_r + 1)<fs.length){
+                    index_r += 1;
+                    updateView_r();
                 }
                 break;
         }

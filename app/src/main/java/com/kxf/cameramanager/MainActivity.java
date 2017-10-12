@@ -272,5 +272,4 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
         String savePath = MyApplication.getSDCardPath() + "/DCIM/feng" + "/" + userLogin.getId();// /feng/ScreenImage
         return savePath;
     }
-
 }

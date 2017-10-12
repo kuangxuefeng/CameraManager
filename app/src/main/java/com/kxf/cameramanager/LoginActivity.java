@@ -2,10 +2,15 @@ package com.kxf.cameramanager;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
@@ -17,23 +22,29 @@ import com.kxf.cameramanager.utils.LogUtil;
 import org.xutils.db.sqlite.WhereBuilder;
 import org.xutils.ex.DbException;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.regex.Pattern;
 
 public class LoginActivity extends BaseActivity implements View.OnClickListener {
 
     private LinearLayout ll_user_list;
     private static final int itemCount = 5;
     private int page = 1;
+    private List<User> usAll = null;
     private List<User> us = null;
     private ImageView iv_user_add, iv_user_last, iv_user_next;
     private boolean isCanClick = true;
     private ProgressBar load_pb;
     private Button btn_bt;
+    private ImageButton ib_query;
+    private EditText et_query;
     private OnItemClickListener listener = new OnItemClickListener() {
         @Override
         public void onItemClick(View v, int itemId) {
+            LogUtil.d("itemId=" + itemId);
             final User u = us.get(itemId);
             switch (v.getId()){
                 case R.id.iv_user_sure:
@@ -96,6 +107,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
     protected void onResume() {
         super.onResume();
         if (isWindowChanged){
+            et_query.setText(null);
             initUser();
             initUserView();
         }
@@ -117,7 +129,10 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
 
     private void initUser() {
         try {
-            us = MyApplication.db().findAll(User.class);
+            usAll = MyApplication.db().findAll(User.class);
+            us = usAll;
+            LogUtil.e("usAll=" + usAll);
+            LogUtil.e("us=" + us);
         } catch (DbException e) {
             e.printStackTrace();
         }
@@ -130,6 +145,29 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
         iv_user_add.setOnClickListener(this);
         iv_user_last.setOnClickListener(this);
         iv_user_next.setOnClickListener(this);
+
+        ib_query = (ImageButton) findViewById(R.id.ib_query);
+        et_query = (EditText) findViewById(R.id.et_query);
+
+        ib_query.setOnClickListener(this);
+        et_query.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                if (TextUtils.isEmpty(s.toString())){
+                    ib_query.callOnClick();
+                }
+            }
+        });
 
         btn_bt = (Button) findViewById(R.id.btn_bt);
         btn_bt.setOnClickListener(this);
@@ -156,6 +194,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
         View.OnClickListener lis = new View.OnClickListener() {
             @Override
             public void onClick(final View v) {
+                LogUtil.d("v=" + v);
                 if (null != listener) {
                     mActivity.runOnUiThread(new Runnable() {
                         @Override
@@ -171,6 +210,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
 
     @Override
     public void onClick(View v) {
+        LogUtil.d("v=" + v);
         switch (v.getId()){
             case R.id.iv_user_add:
                 Intent intent = new Intent(this, UserAddActivity.class);
@@ -192,6 +232,29 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
                 LogUtil.e("intent = new Intent(this, BTClientActivity.class);");
                 intent = new Intent(this, BTClientActivity.class);
                 startActivity(intent);
+                break;
+            case R.id.ib_query:
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        String str = et_query.getText().toString().trim();
+                        if (!TextUtils.isEmpty(str) && null != usAll && usAll.size() > 0){
+                            us = new ArrayList<User>();
+                            for (int i = 0; i < usAll.size(); i++){
+                                LogUtil.e("usAll.size()=" + usAll.size() + "; i=" + i + ";  usAll.get(i)=" + usAll.get(i));
+                                if (Pattern.matches("^(.*" + str + ".*)$", usAll.get(i).getName())){
+                                    us.add(usAll.get(i));
+                                }
+                            }
+                            page = 1;
+                            initUserView();
+                        } else if(TextUtils.isEmpty(str)){
+                            us = usAll;
+                            page = 1;
+                            initUserView();
+                        }
+                    }
+                });
                 break;
         }
     }

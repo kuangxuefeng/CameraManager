@@ -13,4 +13,14 @@
         <item name="android:windowNoTitle">true</item>
     </style>
 
+    <style name="MyEditText">
+        <item name="android:background">@drawable/chazhaoshuru</item>
+        <item name="android:scaleType">fitXY</item>
+    </style>
+
+    <style name="MyButton">
+        <item name="android:background">@drawable/btn_to</item>
+        <item name="android:textColor">@drawable/btn_text_color</item>
+    </style>
+
 </resources>

@@ -1,16 +1,23 @@
 package com.kxf.cameramanager;
 
+import android.graphics.Color;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 
 import org.xutils.ex.DbException;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 public class UserAddActivity extends BaseActivity implements View.OnClickListener {
     private EditText et_user_name, et_user_sex, et_user_tel, et_user_age, et_user_address;
-    private Button btn_back, btn_user_add;
+    private TextView et_user_time;
+    private Button btn_back, btn_user_add, btn_set_nan, btn_set_nv;
+    private boolean isSexNan = true;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -26,6 +33,16 @@ public class UserAddActivity extends BaseActivity implements View.OnClickListene
         et_user_tel = (EditText) findViewById(R.id.et_user_tel);
         et_user_age = (EditText) findViewById(R.id.et_user_age);
         et_user_address = (EditText) findViewById(R.id.et_user_address);
+        et_user_time = (TextView) findViewById(R.id.et_user_time);
+
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy年MM月dd日");
+        et_user_time.setText(sdf.format(new Date()));
+
+        btn_set_nan = (Button) findViewById(R.id.btn_set_nan);
+        btn_set_nv = (Button) findViewById(R.id.btn_set_nv);
+        btn_set_nan.setOnClickListener(this);
+        btn_set_nv.setOnClickListener(this);
+        updateSexView();
 
         btn_back = (Button) findViewById(R.id.btn_back);
         btn_user_add = (Button) findViewById(R.id.btn_user_add);
@@ -64,8 +81,9 @@ public class UserAddActivity extends BaseActivity implements View.OnClickListene
                 u.setName(name);
                 u.setAge(Integer.parseInt(age));
                 u.setTel(tel);
-                u.setSex(et_user_sex.getText().toString().trim());
+                u.setSex(isSexNan? "男":"女");
                 u.setAddress(et_user_address.getText().toString().trim());
+                u.setInfo(et_user_time.getText().toString());
                 try {
                     MyApplication.db().save(u);
                     showToast("添加用户成功！");
@@ -74,6 +92,32 @@ public class UserAddActivity extends BaseActivity implements View.OnClickListene
                 }
                 finish();
                 break;
+            case R.id.btn_set_nan:
+                if (!isSexNan){
+                    isSexNan = true;
+                    updateSexView();
+                }
+                break;
+            case R.id.btn_set_nv:
+                if (isSexNan){
+                    isSexNan = false;
+                    updateSexView();
+                }
+                break;
+        }
+    }
+
+    private void updateSexView(){
+        if (isSexNan){
+            btn_set_nan.setBackgroundResource(R.drawable.sex_choose);
+            btn_set_nv.setBackgroundResource(R.drawable.sex);
+            btn_set_nan.setTextColor(Color.BLACK);
+            btn_set_nv.setTextColor(Color.WHITE);
+        } else {
+            btn_set_nv.setBackgroundResource(R.drawable.sex_choose);
+            btn_set_nan.setBackgroundResource(R.drawable.sex);
+            btn_set_nv.setTextColor(Color.BLACK);
+            btn_set_nan.setTextColor(Color.WHITE);
         }
     }
 

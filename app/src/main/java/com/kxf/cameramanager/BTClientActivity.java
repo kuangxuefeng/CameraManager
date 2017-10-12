@@ -16,6 +16,7 @@ import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
+import android.widget.TextView;
 
 import com.kxf.cameramanager.utils.LogUtil;
 
@@ -34,7 +35,10 @@ import static android.content.ContentValues.TAG;
 
 public class BTClientActivity extends BaseActivity implements OnClickListener {
 
-	private Button btn_an1;
+	private Button btn_an1, btn_an2, btn_an3, btn_an4, btn_time_add, btn_time_red
+			, btn_qian1_add, btn_qian1_red, btn_qian2_add, btn_qian2_red
+			, btn_stop, btn_start, btn_back;
+	private TextView tv_time_tv, tv_qian1_tv, tv_qian2_tv;
 	private static boolean isAlive;
 	private static boolean BluetoothIsConnect;
 	// 声明BluetoothAdapter类 BluetoothAdapter代表本地的蓝牙适配器设备让用户能执行基本的蓝牙任务
@@ -77,7 +81,7 @@ public class BTClientActivity extends BaseActivity implements OnClickListener {
 		if(isWindowChanged){
 			setContentView(R.layout.activity_btclient); // 使用布局文件
 			initView();
-			initBT();
+//			initBT();
 		}
 	}
 
@@ -85,6 +89,9 @@ public class BTClientActivity extends BaseActivity implements OnClickListener {
 	protected void onResume() {
 		super.onResume();
 //		checkBTCon();
+		if(isWindowChanged && !isConnect){
+			initBT();
+		}
 	}
 
 	private void initBT() {
@@ -161,6 +168,36 @@ public class BTClientActivity extends BaseActivity implements OnClickListener {
 	private void initView() {
 		btn_an1 = (Button) findViewById(R.id.btn_an1);
 		btn_an1.setOnClickListener(this);
+		btn_an2 = (Button) findViewById(R.id.btn_an2);
+		btn_an2.setOnClickListener(this);
+		btn_an3 = (Button) findViewById(R.id.btn_an3);
+		btn_an3.setOnClickListener(this);
+		btn_an4 = (Button) findViewById(R.id.btn_an4);
+		btn_an4.setOnClickListener(this);
+
+		btn_time_add = (Button) findViewById(R.id.btn_time_add);
+		btn_time_add.setOnClickListener(this);
+		btn_time_red = (Button) findViewById(R.id.btn_time_red);
+		btn_time_red.setOnClickListener(this);
+		btn_qian1_add = (Button) findViewById(R.id.btn_qian1_add);
+		btn_qian1_add.setOnClickListener(this);
+		btn_qian1_red = (Button) findViewById(R.id.btn_qian1_red);
+		btn_qian1_red.setOnClickListener(this);
+		btn_qian2_add = (Button) findViewById(R.id.btn_qian2_add);
+		btn_qian2_add.setOnClickListener(this);
+		btn_qian2_red = (Button) findViewById(R.id.btn_qian2_red);
+		btn_qian2_red.setOnClickListener(this);
+
+		btn_stop = (Button) findViewById(R.id.btn_stop);
+		btn_stop.setOnClickListener(this);
+		btn_start = (Button) findViewById(R.id.btn_start);
+		btn_start.setOnClickListener(this);
+		btn_back = (Button) findViewById(R.id.btn_back);
+		btn_back.setOnClickListener(this);
+
+		tv_time_tv = (TextView) findViewById(R.id.tv_time_tv);
+		tv_qian1_tv = (TextView) findViewById(R.id.tv_qian1_tv);
+		tv_qian2_tv = (TextView) findViewById(R.id.tv_qian2_tv);
 	}
 
 	Handler handler = new Handler() {
@@ -170,37 +207,59 @@ public class BTClientActivity extends BaseActivity implements OnClickListener {
 			super.handleMessage(msg);
 			switch (msg.what) {
 				case 2000:
-//					sendByBT("A155058103020000");
-//					new Thread(new Runnable() {
-//						@Override
-//						public void run() {
-//							InputStream is = null;
-//							while(true){
-//								try {
-//									if (null == btSocket){
-////										closeBT();
-////										checkBTCon();
-//										return;
-//									}
-//									LogUtil.i("接收轮询 btSocket.isConnected()=" + btSocket.isConnected());
-//									btSocket.connect();
-//									outStream = btSocket.getOutputStream();
-//									is = btSocket.getInputStream();
-//									LogUtil.i("接收轮询 is=" + is);
-//									byte[] buffer =new byte[1024];
-//									int count = is.read(buffer);
-//									String strGet = byte2HexStr(buffer);
-//									LogUtil.i("strGet=" + strGet);
-//									if ("A155058103020000".equals(strGet)){
-//										sendByBT("A155058103020000");
-//									}
-//								} catch (Exception e) {
-//									e.printStackTrace();
-//									LogUtil.e("接收出错！ is=" + is);
-//								}
-//							}
-//						}
-//					}).start();
+					String re = (String) msg.obj;
+					if ("A15504800100010002".equals(re)){
+						btn_an1.setSelected(true);
+						btn_an1.setEnabled(false);
+					} else if ("A15504800100020002".equals(re)){
+						btn_an2.setSelected(true);
+						btn_an2.setEnabled(false);
+					} else if ("A15504800100030002".equals(re)){
+						btn_an3.setSelected(true);
+						btn_an3.setEnabled(false);
+					} else if ("A15504800100040002".equals(re)){
+						btn_an4.setSelected(true);
+						btn_an4.setEnabled(false);
+					}
+//					else if ("A15504800100050002".equals(re)){
+//						btn_time_add.setSelected(true);
+//						btn_time_add.setEnabled(false);
+//					} else if ("A15504800100070002".equals(re)){
+//						btn_time_red.setSelected(true);
+//						btn_time_red.setEnabled(false);
+//					} else if ("A15504800100080002".equals(re)){
+//						btn_qian1_add.setSelected(true);
+//						btn_qian1_add.setEnabled(false);
+//					} else if ("A155048001000A0002".equals(re)){
+//						btn_qian1_red.setSelected(true);
+//						btn_qian1_red.setEnabled(false);
+//					} else if ("A155048001000B0002".equals(re)){
+//						btn_qian2_add.setSelected(true);
+//						btn_qian2_add.setEnabled(false);
+//					} else if ("A155048001000D0002".equals(re)){
+//						btn_qian2_red.setSelected(true);
+//						btn_qian2_red.setEnabled(false);
+//					}
+					else if (isStartWith(re, "A155048001000600")){
+						tv_time_tv.setText(re.substring(re.length()-2));
+					} else if (isStartWith(re, "A155048001000900")){
+						tv_qian1_tv.setText(re.substring(re.length()-2));
+					} else if (isStartWith(re, "A155048001000C00")){
+						tv_qian2_tv.setText(re.substring(re.length()-2));
+					} else if ("A15504800100140002".equals(re)){
+						btn_start.setSelected(true);
+						btn_start.setEnabled(false);
+					} else if ("A15504800100150002".equals(re)){
+						btn_stop.setSelected(true);
+						btn_stop.setEnabled(false);
+					} else if ("A155048001000F0002".equals(re)){
+						startActivity(new Intent(mActivity, LoginActivity.class));
+						finish();
+					}
+					//, btn_stop, btn_start, btn_back;
+					//btn_time_add, btn_time_red
+					//	, btn_qian1_add, btn_qian1_red, btn_qian2_add, btn_qian2_red
+					//tv_time_tv, tv_qian1_tv, tv_qian2_tv
 					break;
 				case 2001:
 					final String send = (String) msg.obj;
@@ -213,6 +272,7 @@ public class BTClientActivity extends BaseActivity implements OnClickListener {
 							} catch (Exception e) {
 								e.printStackTrace();
 								LogUtil.e("发送出错！");
+								isConnect = false;
 //								closeBT();
 //								checkBTCon();
 							}
@@ -227,37 +287,40 @@ public class BTClientActivity extends BaseActivity implements OnClickListener {
 		}
 	};
 
-	@Override
-	public void onPause() {
-		super.onPause();
-//		closeBT();
+	private boolean isStartWith(String src, String startStr){
+		if (TextUtils.isEmpty(src) || TextUtils.isEmpty(startStr) || startStr.length() > src.length()){
+			return false;
+		}
+		return src.startsWith(startStr);
 	}
 
-//	private void closeBT(){
-//		if (outStream != null) {
-//			try {
-//				outStream.flush();
-//				outStream.close();
-//				outStream = null;
-//			} catch (IOException e) {
-//				e.printStackTrace();
-//				outStream = null;
-//			}
-//		}
-//		try {
-//			if (btSocket != null) {
-//				btSocket.close();
-//				btSocket = null;
-//			}
-//		} catch (IOException e) {
-//			e.printStackTrace();
-//			btSocket = null;
-//		}
-//	}
+	private void closeBT(){
+		isConnect = false;
+		if (outStream != null) {
+			try {
+				outStream.flush();
+				outStream.close();
+				outStream = null;
+			} catch (IOException e) {
+				e.printStackTrace();
+				outStream = null;
+			}
+		}
+		try {
+			if (btSocket != null) {
+				btSocket.close();
+				btSocket = null;
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+			btSocket = null;
+		}
+	}
 
 	@Override
 	public void onDestroy() {
 		super.onDestroy();
+		closeBT();
 		if(isWindowChanged){
 			try {
 				unregisterReceiver(mReceiver);
@@ -301,9 +364,46 @@ public class BTClientActivity extends BaseActivity implements OnClickListener {
 
 	@Override
 	public void onClick(View v) {
+		LogUtil.d("v=" + v);
 		switch (v.getId()){
 			case R.id.btn_an1:
 				sendByBT("A15504800100010001");
+				break;
+			case R.id.btn_an2:
+				sendByBT("A15504800100020001");
+				break;
+			case R.id.btn_an3:
+				sendByBT("A15504800100030001");
+				break;
+			case R.id.btn_an4:
+				sendByBT("A15504800100040001");
+				break;
+			case R.id.btn_time_add:
+				sendByBT("A15504800100050001");
+				break;
+			case R.id.btn_time_red:
+				sendByBT("A15504800100070001");
+				break;
+			case R.id.btn_qian1_add:
+				sendByBT("A15504800100080001");
+				break;
+			case R.id.btn_qian1_red:
+				sendByBT("A155048001000A0001");
+				break;
+			case R.id.btn_qian2_add:
+				sendByBT("A155048001000B0001");
+				break;
+			case R.id.btn_qian2_red:
+				sendByBT("A155048001000D0001");
+				break;
+			case R.id.btn_stop:
+				sendByBT("A15504800100150001");
+				break;
+			case R.id.btn_start:
+				sendByBT("A15504800100140001");
+				break;
+			case R.id.btn_back:
+				sendByBT("A155048001000F0001");
 				break;
 		}
 	}
@@ -340,57 +440,6 @@ public class BTClientActivity extends BaseActivity implements OnClickListener {
 		LogUtil.i("deviceList=" + deviceList);
 		return deviceList;
 	}
-
-//	public void checkBTCon() {
-//		if (null == btSocket || null == outStream || (!btSocket.isConnected())){
-//			new Thread(new Runnable() {
-//				@Override
-//				public void run() {
-//					LogUtil.i("checkBTCon  run...");
-//					localBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
-//					if (null == localBluetoothAdapter){
-//						showDialog("当前蓝牙未连接，是否连接？", null, null, "是", new Runnable() {
-//							@Override
-//							public void run() {
-//								finish();
-//							}
-//						});
-//						return;
-//					}
-//					List<BluetoothDevice> bts = getBt();
-//					if (null == bts || bts.size()<1){
-//						showDialog("当前蓝牙未连接，是否连接？", "否", new Runnable() {
-//							@Override
-//							public void run() {
-//								finish();
-//							}
-//						}, "是", new Runnable() {
-//							@Override
-//							public void run() {
-//								startActivity(new Intent(Settings.ACTION_BLUETOOTH_SETTINGS));
-//							}
-//						});
-//					}else {
-//						BluetoothDevice bluetoothDevice = localBluetoothAdapter
-//								.getRemoteDevice(bts.get(0).getAddress());
-//						try {
-//							Method m = bluetoothDevice.getClass()
-//									.getMethod("createRfcommSocket",
-//											new Class[] { int.class });
-//							btSocket = (BluetoothSocket) m.invoke(
-//									bluetoothDevice, Integer.valueOf(1)); // 1==RFCOMM
-//							btSocket.connect();
-//							outStream = btSocket.getOutputStream();
-//							handler.sendEmptyMessage(2000);
-//						} catch (Exception e) {
-//							e.printStackTrace();
-//						}
-//					}
-//					LogUtil.i("outStream=" + outStream);
-//				}
-//			}).start();
-//		}
-//	}
 
 	private void sendByBT(String str){
 		LogUtil.i("str=" + str);
@@ -473,6 +522,7 @@ public class BTClientActivity extends BaseActivity implements OnClickListener {
 					inStream=btSocket.getInputStream();
 					LogUtil.i("outStream=" + outStream);
 					LogUtil.i("inStream=" + inStream);
+					isConnect = true;
 					showToast("连接成功");
 					new Thread(new Connect()).start();
 				} catch (IOException e) {
@@ -526,6 +576,8 @@ public class BTClientActivity extends BaseActivity implements OnClickListener {
 				try {
 					inStream.read(buffer);
 					LogUtil.i("inStream.read(buffer)=" + byte2HexStr(buffer));
+					showToast("接收到：" + byte2HexStr(buffer));
+					handler.obtainMessage(2000, byte2HexStr(buffer)).sendToTarget();
 				} catch (IOException e) {
 					e.printStackTrace();
 				}

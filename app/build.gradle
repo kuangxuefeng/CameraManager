@@ -13,6 +13,7 @@ android {
         versionCode 1
         versionName "1.0"
         buildConfigField "String", "buileDateTime", getDateTime()
+        buildConfigField "long", "BUILD_TIME_LONG", "${System.currentTimeMillis()}L"
     }
     buildTypes {
         release {

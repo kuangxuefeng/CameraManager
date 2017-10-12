@@ -1,6 +1,7 @@
 package com.kxf.cameramanager;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextUtils;
@@ -22,11 +23,14 @@ import com.kxf.cameramanager.utils.LogUtil;
 import org.xutils.db.sqlite.WhereBuilder;
 import org.xutils.ex.DbException;
 
+import java.net.URL;
+import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.regex.Pattern;
+
 
 public class LoginActivity extends BaseActivity implements View.OnClickListener {
 
@@ -41,6 +45,11 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
     private Button btn_bt;
     private ImageButton ib_query;
     private EditText et_query;
+
+    private static final String KEY_DATA_OUT = "key_data_out";
+    private static final String KEY_DATA_OUT_BUILD_TIME = "key_data_out_build_time";
+    private static final int dateOut_day = 1;//1天
+
     private OnItemClickListener listener = new OnItemClickListener() {
         @Override
         public void onItemClick(View v, int itemId) {
@@ -110,6 +119,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
             et_query.setText(null);
             initUser();
             initUserView();
+            checkDate();
         }
     }
 
@@ -261,5 +271,64 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
 
     public interface OnItemClickListener {
         void onItemClick(View v, int itemId);
+    }
+
+    private void checkDate() {
+        final SharedPreferences sp = getPreferences(MODE_PRIVATE);
+        long bt = sp.getLong(KEY_DATA_OUT_BUILD_TIME, 0);
+        LogUtil.e("判断到期 保存的程序编译时间 bt=" + bt);
+        LogUtil.e("判断到期 当前程序编译时间 BuildConfig.BUILD_TIME_LONG=" + BuildConfig.BUILD_TIME_LONG);
+        if (sp.getBoolean(KEY_DATA_OUT, false) && bt == BuildConfig.BUILD_TIME_LONG) {
+            LogUtil.e("已判断到期！");
+            showDialog("版本已过期，请联系开发人员！", "确定", new Runnable() {
+                @Override
+                public void run() {
+                    finish();
+                }
+            }, null, null);
+            return;
+        }else if (bt != BuildConfig.BUILD_TIME_LONG){
+            sp.edit().putBoolean(KEY_DATA_OUT, false).commit();
+            sp.edit().putLong(KEY_DATA_OUT_BUILD_TIME, BuildConfig.BUILD_TIME_LONG).commit();
+            return;
+        }
+        new Thread(new Runnable() {
+
+            @Override
+            public void run() {
+                long dateOut = BuildConfig.BUILD_TIME_LONG + 24*60*60*1000*dateOut_day;
+                long timeL = getTimeCurr();
+                LogUtil.e("判断到期 dateOut=" + dateOut);
+                LogUtil.e("判断到期 timeL=" + timeL);
+                if (timeL >= dateOut) {
+                    runOnUiThread(new Runnable() {
+                        public void run() {
+                            sp.edit().putBoolean(KEY_DATA_OUT, true).commit();
+                            sp.edit().putLong(KEY_DATA_OUT_BUILD_TIME, BuildConfig.BUILD_TIME_LONG).commit();
+                            showDialog("版本已过期，请联系开发人员！", "确定", new Runnable() {
+                                @Override
+                                public void run() {
+                                    finish();
+                                }
+                            }, null, null);
+                        }
+                    });
+                }
+            }
+        }).start();
+    }
+
+    private long getTimeCurr() {
+        URLConnection uc = null;
+        long ld = System.currentTimeMillis();
+        try {
+            URL url = new URL("http://www.baidu.com");// 取得资源对象
+            uc = url.openConnection();
+            uc.connect(); // 发出连接
+            ld = uc.getDate(); // 取得网站日期时间
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return ld;
     }
 }

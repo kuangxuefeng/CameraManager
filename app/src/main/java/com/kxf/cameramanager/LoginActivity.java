@@ -25,7 +25,9 @@ import org.xutils.ex.DbException;
 
 import java.net.URL;
 import java.net.URLConnection;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -48,7 +50,8 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
 
     private static final String KEY_DATA_OUT = "key_data_out";
     private static final String KEY_DATA_OUT_BUILD_TIME = "key_data_out_build_time";
-    private static final int dateOut_day = 1;//1天
+    private static final int dateOut_day = 0;//1  1天
+    private static final int dateOut_minutes = 5;//1  1分钟
 
     private OnItemClickListener listener = new OnItemClickListener() {
         @Override
@@ -296,10 +299,12 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
 
             @Override
             public void run() {
-                long dateOut = BuildConfig.BUILD_TIME_LONG + 24*60*60*1000*dateOut_day;
+                long dateOut = BuildConfig.BUILD_TIME_LONG + 24*60*60*1000*dateOut_day + 60*1000*dateOut_minutes;
                 long timeL = getTimeCurr();
                 LogUtil.e("判断到期 dateOut=" + dateOut);
                 LogUtil.e("判断到期 timeL=" + timeL);
+                LogUtil.e("判断到期 当前时间：" + new SimpleDateFormat("yyyy/MM/dd HH:mm:ss SSS").format(new Date(timeL)));
+                LogUtil.e("判断到期 到期时间：" + new SimpleDateFormat("yyyy/MM/dd HH:mm:ss SSS").format(new Date(dateOut)));
                 if (timeL >= dateOut) {
                     runOnUiThread(new Runnable() {
                         public void run() {

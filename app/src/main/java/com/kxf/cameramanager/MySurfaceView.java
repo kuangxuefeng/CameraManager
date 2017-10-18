@@ -50,8 +50,8 @@ public class MySurfaceView extends SurfaceView implements
         isBackCamera = !isBackCamera;
 		// TODO Auto-generated method stub
 		if (myCamera == null) {
-			if (FindFrontCamera()!=-1) {
-				changeCamera();
+			if (false) {
+				changeCamera();//FindFrontCamera()!=-1
 			}else{
 				myCamera = Camera.open();// �������,���ܷ��ڹ��캯���У���Ȼ������ʾ����.
 				try {
@@ -100,10 +100,12 @@ public class MySurfaceView extends SurfaceView implements
         for ( int camIdx = 0; camIdx < cameraCount;camIdx++ ) {  
             Camera.getCameraInfo( camIdx, cameraInfo ); // get camerainfo  
             if ( cameraInfo.facing ==Camera.CameraInfo.CAMERA_FACING_FRONT ) {   
-                // ��������ͷ�ķ�λ��Ŀǰ�ж���ֵ�����ֱ�ΪCAMERA_FACING_FRONTǰ�ú�CAMERA_FACING_BACK����  
+                // ��������ͷ�ķ�λ��Ŀǰ�ж���ֵ�����ֱ�ΪCAMERA_FACING_FRONTǰ�ú�CAMERA_FACING_BACK����
+				LogUtil.e("camIdx=" + camIdx);
                return camIdx;  
             }  
-        }  
+        }
+		LogUtil.e("return -1");
         return -1;  
     }  
     @TargetApi(9)  
@@ -123,6 +125,7 @@ public class MySurfaceView extends SurfaceView implements
     }
     
     public void changeCamera(){
+		LogUtil.e("changeCamera");
     	if (FindFrontCamera()==-1) {
 			return;
 		}

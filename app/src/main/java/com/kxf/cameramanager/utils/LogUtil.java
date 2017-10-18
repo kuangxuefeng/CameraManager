@@ -1,28 +1,40 @@
 package com.kxf.cameramanager.utils;
 
 
+import android.text.TextUtils;
 import android.util.Log;
+
+import com.kxf.cameramanager.MyApplication;
 
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 public class LogUtil {
 
     private static boolean isOpenLog = true;
     public final static String KeyLogFileName = "KeyLogFileName";
     private static String logFile;
-    private static final long logFileSizeKB = 50 * 1024;//50*1024  为50m
+    private static final long logFileSizeKB = 5 * 1024;//50*1024  为50m
 
-//    static {
-//        getLogFilePath(false);
-//        File f = new File(logFile);
-//        double fLen = f.length() / 1024.00;
-//        if (fLen > logFileSizeKB) {
-//            getLogFilePath(true);
-//        }
-//    }
+    static {
+        getLogFilePath(false);
+        File f = new File(logFile);
+        double fLen = f.length() / 1024.00;
+        if (!f.exists() || fLen > logFileSizeKB) {
+            try {
+                if (f.exists()){
+                    f.delete();
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            getLogFilePath(true);
+        }
+    }
 
     public static void e(String msg) {
         if (isOpenLog) {
@@ -84,14 +96,21 @@ public class LogUtil {
         return "-----";
     }
 
-//    private static void getLogFilePath(boolean isForceUpdate) {
-//        logFile = MyApplication.getShare(KeyLogFileName, "");
-//        if (TextUtils.isEmpty(logFile) || isForceUpdate) {
-//            logFile = AppConfig.folder_log + File.separator + AppConfig.sdf_no_split.format(new Date()) + ".txt";
-//            AppConfig.creatFile(new File(logFile));
-//            MyApplication.saveShare(KeyLogFileName, logFile);
-//        }
-//    }
+    private static void getLogFilePath(boolean isForceUpdate) {
+        logFile = MyApplication.getShare(KeyLogFileName, "");
+        if (TextUtils.isEmpty(logFile) || isForceUpdate) {
+            logFile = MyApplication.getSDCardPath() + File.separator + "log_" + new SimpleDateFormat("yyyyMMddHHmmss").format(new Date()) + ".main";
+            File f = new File(logFile);
+            if (!f.exists()) {
+                try {
+                    f.createNewFile();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+            MyApplication.saveShare(KeyLogFileName, logFile);
+        }
+    }
 
     private static String getSimpleClassName(String name) {
         int lastIndex = name.lastIndexOf(".");
@@ -99,9 +118,9 @@ public class LogUtil {
     }
 
     private static boolean writeFile(String TAG, String value) {
-//        String str = EncUtil.encryptAsString(MyDesKeyUtil.get3DesKeyDef(), TAG + " : " + value);
-//        return writeFile(str);
-        return false;
+        String str = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss SSS").format(new Date()) + "     " + TAG + " : " + value;
+        return writeFile(str);
+//        return false;
     }
 
     private static boolean writeFile(String str) {

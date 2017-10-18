@@ -5,6 +5,7 @@ import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Environment;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.kxf.cameramanager.utils.LogUtil;
 
@@ -12,6 +13,9 @@ import org.xutils.DbManager;
 import org.xutils.x;
 
 import java.io.File;
+import java.io.PrintWriter;
+import java.io.StringWriter;
+import java.io.Writer;
 
 
 public class MyApplication extends Application {
@@ -27,6 +31,35 @@ public class MyApplication extends Application {
         Log.e("MyApplication", "BuildConfig.buileDateTime=" + BuildConfig.buileDateTime);
         Log.e("MyApplication", "BuildConfig.VERSION_CODE=" + BuildConfig.VERSION_CODE);
         Log.e("MyApplication", "BuildConfig.VERSION_NAME=" + BuildConfig.VERSION_NAME);
+        Thread.setDefaultUncaughtExceptionHandler(new Thread.UncaughtExceptionHandler() {
+
+            @Override
+            public void uncaughtException(Thread thread, Throwable ex) {
+                LogUtil.e("应用异常退出......");
+//                LogUtil.e(ex.getMessage());
+//                LogUtil.e(Arrays.toString(ex.getStackTrace()));
+//                LogUtil.e(ex.toString());
+//                StackTraceElement[] sts = ex.getStackTrace();
+//                if (null != sts && sts.length>0){
+//                    for (StackTraceElement st : sts){
+//                        LogUtil.e("      "+st.toString());
+//                    }
+//                }
+                Writer writer = new StringWriter();
+                PrintWriter printWriter = new PrintWriter(writer);
+                ex.printStackTrace(printWriter);
+                Throwable cause = ex.getCause();
+                while (cause != null) {
+                    cause.printStackTrace(printWriter);
+                    cause = cause.getCause();
+                }
+                printWriter.close();
+                String result = writer.toString();
+                LogUtil.e(result);
+                Toast.makeText(getApplicationContext(), "程序发生故障退出，请稍后重试", Toast.LENGTH_SHORT).show();
+                android.os.Process.killProcess(android.os.Process.myPid());
+            }
+        });
         initDB();
     }
 

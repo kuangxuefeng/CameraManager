@@ -50,8 +50,8 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
 
     private static final String KEY_DATA_OUT = "key_data_out";
     private static final String KEY_DATA_OUT_BUILD_TIME = "key_data_out_build_time";
-    private static final int dateOut_day = 0;//1  1天
-    private static final int dateOut_minutes = 5;//1  1分钟
+    private static final int dateOut_day = 7;//1  1天
+    private static final int dateOut_minutes = 0;//1  1分钟
 
     private OnItemClickListener listener = new OnItemClickListener() {
         @Override
@@ -122,7 +122,8 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
             et_query.setText(null);
             initUser();
             initUserView();
-            checkDate();
+            LogUtil.i("正式版");
+//            checkDate();//正式版，不要期限检查
         }
     }
 

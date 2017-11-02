@@ -4,9 +4,13 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
+import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+
+import com.kxf.cameramanager.utils.LogUtil;
 
 import org.xutils.ex.DbException;
 
@@ -24,6 +28,33 @@ public class UserAddActivity extends BaseActivity implements View.OnClickListene
         setContentView(R.layout.activity_user_add);
         if (isWindowChanged){
             initView();
+            ViewTreeObserver obs = et_user_name.getViewTreeObserver();
+            obs.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+                @Override
+                public void onGlobalLayout() {
+                    et_user_name.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+                    LogUtil.d("et_user_name.getHeight()=" + et_user_name.getHeight());
+                    int hight = et_user_name.getHeight()*9/10;
+                    ViewGroup.LayoutParams laynan = btn_set_nan.getLayoutParams();
+                    laynan.height = hight;
+                    laynan.width = laynan.height;
+                    btn_set_nan.setLayoutParams(laynan);
+                    ViewGroup.LayoutParams laynv = btn_set_nv.getLayoutParams();
+                    laynv.height = hight;
+                    laynv.width = laynv.height;
+                    btn_set_nv.setLayoutParams(laynv);
+
+                    ViewGroup.LayoutParams layback = btn_back.getLayoutParams();
+                    layback.height = hight;
+                    layback.width = layback.height;
+                    btn_back.setLayoutParams(layback);
+
+                    ViewGroup.LayoutParams layadd = btn_user_add.getLayoutParams();
+                    layadd.height = hight;
+                    layadd.width = layadd.height;
+                    btn_user_add.setLayoutParams(layadd);
+                }
+            });
         }
     }
 

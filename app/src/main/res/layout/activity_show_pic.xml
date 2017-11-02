@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#000000"
+    android:background="@drawable/main_bg"
     tools:context="com.kxf.cameramanager.ShowPicActivity">
     <LinearLayout
         android:layout_width="match_parent"
@@ -18,47 +18,52 @@
             <ImageView
                 android:id="@+id/iv_center"
                 android:layout_width="match_parent"
-                android:layout_weight="3"
+                android:layout_weight="4"
                 android:scaleType="fitXY"
                 android:background="@drawable/shape_et_bg_null"
                 android:layout_height="0dp" />
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
-                android:orientation="horizontal"
                 android:layout_margin="5dp"
-                android:layout_weight="1">
+                android:layout_weight="1"
+                android:orientation="horizontal"
+                android:visibility="gone">
+
                 <ImageView
                     android:id="@+id/iv_left2"
                     android:layout_width="0dp"
+                    android:layout_height="match_parent"
                     android:layout_weight="1"
-                    android:background="@drawable/shape_et_bg_null"
-                    android:layout_height="match_parent" />
+                    android:background="@drawable/shape_et_bg_null" />
+
                 <ImageView
                     android:id="@+id/iv_left1"
                     android:layout_width="0dp"
+                    android:layout_height="match_parent"
                     android:layout_weight="1"
-                    android:background="@drawable/shape_et_bg_null"
-                    android:layout_height="match_parent" />
+                    android:background="@drawable/shape_et_bg_null" />
 
                 <ImageView
                     android:id="@+id/iv_right1"
                     android:layout_width="0dp"
+                    android:layout_height="match_parent"
                     android:layout_weight="1"
-                    android:background="@drawable/shape_et_bg_null"
-                    android:layout_height="match_parent" />
+                    android:background="@drawable/shape_et_bg_null" />
+
                 <ImageView
                     android:id="@+id/iv_right2"
                     android:layout_width="0dp"
-                    android:layout_weight="1"
-                    android:background="@drawable/shape_et_bg_null"
+                    android:layout_height="match_parent"
                     android:layout_marginRight="20dp"
-                    android:layout_height="match_parent" />
+                    android:layout_weight="1"
+                    android:background="@drawable/shape_et_bg_null" />
             </LinearLayout>
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
-                android:layout_weight="1">
+                android:layout_weight="2">
                 <Button
                     android:id="@+id/btn_delete"
                     android:layout_width="50dp"
@@ -92,7 +97,7 @@
             <ImageView
                 android:id="@+id/iv_center_r"
                 android:layout_width="match_parent"
-                android:layout_weight="3"
+                android:layout_weight="4"
                 android:scaleType="fitXY"
                 android:background="@drawable/shape_et_bg_null"
                 android:layout_height="0dp" />
@@ -101,6 +106,7 @@
                 android:layout_height="0dp"
                 android:orientation="horizontal"
                 android:layout_margin="5dp"
+                android:visibility="gone"
                 android:layout_weight="1">
                 <ImageView
                     android:id="@+id/iv_left2_r"
@@ -132,7 +138,7 @@
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
-                android:layout_weight="1">
+                android:layout_weight="2">
                 <Button
                     android:id="@+id/btn_delete_r"
                     android:layout_width="50dp"

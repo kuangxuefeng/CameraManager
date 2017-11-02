@@ -26,8 +26,9 @@ import java.util.List;
 public class ShowPicActivity extends BaseActivity implements View.OnClickListener, FileChooseDialog.onFileChooseListener {
 
     private static final int FILE_SELECT_CODE = 500;
-    private ImageView iv_left2, iv_left1, iv_center, iv_right1, iv_right2;
-    private ImageView iv_left2_r, iv_left1_r, iv_center_r, iv_right1_r, iv_right2_r;
+//    private ImageView iv_left2, iv_left1, iv_right1, iv_right2;
+    private ImageView iv_center, iv_center_r;
+//    private ImageView iv_left2_r, iv_left1_r, iv_right1_r, iv_right2_r;
     private Button btn_out, btn_delete, btn_last, btn_back, btn_next;
     private Button btn_delete_r, btn_last_r, btn_next_r;
     private ProgressBar load_pb;
@@ -46,17 +47,17 @@ public class ShowPicActivity extends BaseActivity implements View.OnClickListene
 
     private void initView() {
         load_pb = (ProgressBar) findViewById(R.id.load_pb);
-        iv_left2 = (ImageView) findViewById(R.id.iv_left2);
-        iv_left1 = (ImageView) findViewById(R.id.iv_left1);
+//        iv_left2 = (ImageView) findViewById(R.id.iv_left2);
+//        iv_left1 = (ImageView) findViewById(R.id.iv_left1);
         iv_center = (ImageView) findViewById(R.id.iv_center);
-        iv_right1 = (ImageView) findViewById(R.id.iv_right1);
-        iv_right2 = (ImageView) findViewById(R.id.iv_right2);
+//        iv_right1 = (ImageView) findViewById(R.id.iv_right1);
+//        iv_right2 = (ImageView) findViewById(R.id.iv_right2);
 
-        iv_left2_r = (ImageView) findViewById(R.id.iv_left2_r);
-        iv_left1_r = (ImageView) findViewById(R.id.iv_left1_r);
+//        iv_left2_r = (ImageView) findViewById(R.id.iv_left2_r);
+//        iv_left1_r = (ImageView) findViewById(R.id.iv_left1_r);
         iv_center_r = (ImageView) findViewById(R.id.iv_center_r);
-        iv_right1_r = (ImageView) findViewById(R.id.iv_right1_r);
-        iv_right2_r = (ImageView) findViewById(R.id.iv_right2_r);
+//        iv_right1_r = (ImageView) findViewById(R.id.iv_right1_r);
+//        iv_right2_r = (ImageView) findViewById(R.id.iv_right2_r);
 
         btn_out = (Button) findViewById(R.id.btn_out);
         btn_delete = (Button) findViewById(R.id.btn_delete);
@@ -99,26 +100,26 @@ public class ShowPicActivity extends BaseActivity implements View.OnClickListene
     private void updateView() {
         if (null != fs && fs.length>0){
             iv_center.setImageBitmap(BitmapFactory.decodeFile(fs[index].getPath()));
-            if ((index - 1)>=0){
-                iv_left1.setImageBitmap(BitmapFactory.decodeFile(fs[index - 1].getPath()));
-            }else {
-                iv_left1.setImageBitmap(null);
-            }
-            if ((index - 2)>=0){
-                iv_left2.setImageBitmap(BitmapFactory.decodeFile(fs[index - 2].getPath()));
-            }else {
-                iv_left2.setImageBitmap(null);
-            }
-            if ((index + 1)<fs.length){
-                iv_right1.setImageBitmap(BitmapFactory.decodeFile(fs[index + 1].getPath()));
-            }else {
-                iv_right1.setImageBitmap(null);
-            }
-            if ((index + 2)<fs.length){
-                iv_right2.setImageBitmap(BitmapFactory.decodeFile(fs[index + 2].getPath()));
-            }else {
-                iv_right2.setImageBitmap(null);
-            }
+//            if ((index - 1)>=0){
+//                iv_left1.setImageBitmap(BitmapFactory.decodeFile(fs[index - 1].getPath()));
+//            }else {
+//                iv_left1.setImageBitmap(null);
+//            }
+//            if ((index - 2)>=0){
+//                iv_left2.setImageBitmap(BitmapFactory.decodeFile(fs[index - 2].getPath()));
+//            }else {
+//                iv_left2.setImageBitmap(null);
+//            }
+//            if ((index + 1)<fs.length){
+//                iv_right1.setImageBitmap(BitmapFactory.decodeFile(fs[index + 1].getPath()));
+//            }else {
+//                iv_right1.setImageBitmap(null);
+//            }
+//            if ((index + 2)<fs.length){
+//                iv_right2.setImageBitmap(BitmapFactory.decodeFile(fs[index + 2].getPath()));
+//            }else {
+//                iv_right2.setImageBitmap(null);
+//            }
         }else {
             iv_center.setImageBitmap(null);
         }
@@ -127,26 +128,26 @@ public class ShowPicActivity extends BaseActivity implements View.OnClickListene
     private void updateView_r() {
         if (null != fs && fs.length>0){
             iv_center_r.setImageBitmap(BitmapFactory.decodeFile(fs[index_r].getPath()));
-            if ((index_r - 1)>=0){
-                iv_left1_r.setImageBitmap(BitmapFactory.decodeFile(fs[index_r - 1].getPath()));
-            }else {
-                iv_left1_r.setImageBitmap(null);
-            }
-            if ((index_r - 2)>=0){
-                iv_left2_r.setImageBitmap(BitmapFactory.decodeFile(fs[index_r - 2].getPath()));
-            }else {
-                iv_left2_r.setImageBitmap(null);
-            }
-            if ((index_r + 1)<fs.length){
-                iv_right1_r.setImageBitmap(BitmapFactory.decodeFile(fs[index_r + 1].getPath()));
-            }else {
-                iv_right1_r.setImageBitmap(null);
-            }
-            if ((index_r + 2)<fs.length){
-                iv_right2_r.setImageBitmap(BitmapFactory.decodeFile(fs[index_r + 2].getPath()));
-            }else {
-                iv_right2_r.setImageBitmap(null);
-            }
+//            if ((index_r - 1)>=0){
+//                iv_left1_r.setImageBitmap(BitmapFactory.decodeFile(fs[index_r - 1].getPath()));
+//            }else {
+//                iv_left1_r.setImageBitmap(null);
+//            }
+//            if ((index_r - 2)>=0){
+//                iv_left2_r.setImageBitmap(BitmapFactory.decodeFile(fs[index_r - 2].getPath()));
+//            }else {
+//                iv_left2_r.setImageBitmap(null);
+//            }
+//            if ((index_r + 1)<fs.length){
+//                iv_right1_r.setImageBitmap(BitmapFactory.decodeFile(fs[index_r + 1].getPath()));
+//            }else {
+//                iv_right1_r.setImageBitmap(null);
+//            }
+//            if ((index_r + 2)<fs.length){
+//                iv_right2_r.setImageBitmap(BitmapFactory.decodeFile(fs[index_r + 2].getPath()));
+//            }else {
+//                iv_right2_r.setImageBitmap(null);
+//            }
         }else {
             iv_center_r.setImageBitmap(null);
         }

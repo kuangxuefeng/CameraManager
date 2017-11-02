@@ -6,15 +6,18 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
+import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.google.gson.Gson;
@@ -36,12 +39,15 @@ import java.util.regex.Pattern;
 
 public class LoginActivity extends BaseActivity implements View.OnClickListener {
 
+    private int screenWidth;
+    private int screenHeight;
     private LinearLayout ll_user_list;
+    private RelativeLayout rl_bottom;
     private static final int itemCount = 5;
     private int page = 1;
     private List<User> usAll = null;
     private List<User> us = null;
-    private ImageView iv_user_add, iv_user_last, iv_user_next;
+    private ImageView iv_user_add, iv_user_last, iv_user_next, iv_bg;
     private boolean isCanClick = true;
     private ProgressBar load_pb;
     private Button btn_bt;
@@ -112,7 +118,57 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
 
         if (isWindowChanged){
             initView();
+            initViewSize();
         }
+    }
+
+    private void initViewSize() {
+        DisplayMetrics metric = new DisplayMetrics();
+        getWindowManager().getDefaultDisplay().getMetrics(metric);
+        int width = metric.widthPixels;  // 屏幕宽度（像素）
+        int height = metric.heightPixels;  // 屏幕高度（像素）
+        final float density = metric.density;  // 屏幕密度（0.75 / 1.0 / 1.5）
+        int densityDpi = metric.densityDpi;  // 屏幕密度DPI（120 / 160 / 240）
+        LogUtil.d("height=" + height + ";width=" + width);
+        LogUtil.d("density=" + density + ";densityDpi=" + densityDpi);
+        //屏幕宽度算法:屏幕宽度（像素）/屏幕密度
+        screenWidth = (int) (width/density);//屏幕宽度(dp)
+        screenHeight = (int)(height/density);//屏幕高度(dp)
+        LogUtil.d("screenWidth=" + screenWidth + ";screenHeight=" + screenHeight);
+        iv_bg = (ImageView) findViewById(R.id.iv_bg);
+        ViewTreeObserver obs = iv_bg.getViewTreeObserver();
+        obs.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+            @Override
+            public void onGlobalLayout() {
+                iv_bg.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+                int height = (int) (iv_bg.getHeight()/density);
+                int width = (int) (iv_bg.getWidth()/density);
+                LogUtil.d("height=" + height + ";width=" + width);
+
+                ViewGroup.LayoutParams rlLay = rl_bottom.getLayoutParams();
+                int h = rlLay.height * width / 540;
+                rlLay.height = h;
+                LogUtil.d("h=" + h);
+                rl_bottom.setLayoutParams(rlLay);
+
+                LogUtil.d("rl_bottom " + "rl_bottom.getHeight()=" + rl_bottom.getHeight() + ";rl_bottom.getWidth()=" + rl_bottom.getWidth());
+                LogUtil.d("iv_user_add " + "height=" + iv_user_add.getHeight()/density + ";width=" + iv_user_add.getWidth()/density);
+                LogUtil.d("iv_user_last " + "height=" + iv_user_last.getHeight()/density + ";width=" + iv_user_last.getWidth()/density);
+                LogUtil.d("iv_user_next " + "height=" + iv_user_next.getHeight()/density + ";width=" + iv_user_next.getWidth()/density);
+
+                RelativeLayout.LayoutParams addLay = (RelativeLayout.LayoutParams) iv_user_add.getLayoutParams();
+                RelativeLayout.LayoutParams nextLay = (RelativeLayout.LayoutParams) iv_user_next.getLayoutParams();
+                //screenWidth=640;screenHeight=360     height=560;width=1080
+                RelativeLayout.LayoutParams lastLay = (RelativeLayout.LayoutParams) iv_user_last.getLayoutParams();
+                LogUtil.d("lastLay.rightMargin=" + lastLay.rightMargin);
+                int margin = (int) ((int) (width/2.0*(215.0/270.0) - iv_user_add.getWidth()/density/2 - iv_user_last.getWidth()/density/2)*density);
+                lastLay.rightMargin = margin;
+                nextLay.leftMargin = margin;
+                LogUtil.d("lastLay.rightMargin=" + lastLay.rightMargin);
+                iv_user_last.setLayoutParams(lastLay);
+                iv_user_next.setLayoutParams(nextLay);
+            }
+        });
     }
 
     @Override
@@ -189,6 +245,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
         ll_user_list = (LinearLayout) findViewById(R.id.ll_user_list);
         load_pb = (ProgressBar) findViewById(R.id.load_pb);
         load_pb.setVisibility(View.GONE);
+        rl_bottom = (RelativeLayout) findViewById(R.id.rl_bottom);
     }
 
     private void addItem(ViewGroup parent, User u, int itemId) {
@@ -237,7 +294,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
                 }
                 break;
             case R.id.iv_user_next:
-                if (page*itemCount<us.size()){
+                if (null != us && page*itemCount<us.size()){
                     page++;
                     initUserView();
                 }

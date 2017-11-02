@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#000000"
+    android:background="@drawable/main_bg"
     tools:context="com.kxf.cameramanager.LoginActivity">
     <LinearLayout
         android:layout_marginLeft="50dp"
@@ -32,8 +32,10 @@
         </RelativeLayout>
         <RelativeLayout
             android:layout_width="match_parent"
+            android:layout_marginBottom="10dp"
             android:layout_height="match_parent">
             <ImageView
+                android:id="@+id/iv_bg"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:src="@drawable/user_list"
@@ -107,6 +109,7 @@
                 </LinearLayout>
             </LinearLayout>
             <RelativeLayout
+                android:id="@+id/rl_bottom"
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
                 android:layout_alignParentBottom="true">

@@ -3,7 +3,7 @@
     <!-- 圆角边框 -->
 
     <!-- 实心 背景色-->
-    <solid android:color="#595555" />
+    <solid android:color="#59555511" />
     <!-- 边框 颜色-->
     <stroke
         android:width="5dp"

@@ -47,7 +47,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
     private int page = 1;
     private List<User> usAll = null;
     private List<User> us = null;
-    private ImageView iv_user_add, iv_user_last, iv_user_next, iv_bg;
+    private ImageView iv_user_add, iv_user_last, iv_user_next, iv_bg, iv_people;
     private boolean isCanClick = true;
     private ProgressBar load_pb;
     private Button btn_bt;
@@ -106,6 +106,14 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
                             }
                         }
                     });
+                    break;
+                case R.id.iv_people:
+                    Gson gson = new Gson();
+                    String userStr = gson.toJson(u);
+                    Intent intent = new Intent(mActivity, UserAddActivity.class);
+                    intent.putExtra("userStr", userStr);
+                    intent.putExtra("type", 1);
+                    startActivity(intent);
                     break;
             }
         }
@@ -257,6 +265,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
         ((TextView) ll_user_item.findViewById(R.id.tv_user_tel)).setText("电话:" + u.getTel());
         ll_user_item.findViewById(R.id.iv_user_sure).setOnClickListener(getLister(listener, itemId));
         ll_user_item.findViewById(R.id.iv_user_delete).setOnClickListener(getLister(listener, itemId));
+        ll_user_item.findViewById(R.id.iv_people).setOnClickListener(getLister(listener, itemId));
         ll_user_list.removeAllViews();
         parent.addView(ll_user_item);
     }

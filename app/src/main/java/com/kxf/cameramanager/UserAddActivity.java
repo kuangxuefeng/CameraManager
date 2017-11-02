@@ -10,6 +10,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.google.gson.Gson;
 import com.kxf.cameramanager.utils.LogUtil;
 
 import org.xutils.ex.DbException;
@@ -22,6 +23,8 @@ public class UserAddActivity extends BaseActivity implements View.OnClickListene
     private TextView et_user_time;
     private Button btn_back, btn_user_add, btn_set_nan, btn_set_nv;
     private boolean isSexNan = true;
+    private int type = 0;
+    private User userM;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -53,18 +56,47 @@ public class UserAddActivity extends BaseActivity implements View.OnClickListene
                     layadd.height = hight;
                     layadd.width = layadd.height;
                     btn_user_add.setLayoutParams(layadd);
+
+                    mActivity.runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            type = getIntent().getIntExtra("type", 0);
+                            String userStr = getIntent().getStringExtra("userStr");
+                            Gson gson = new Gson();
+                            User u = gson.fromJson(userStr, User.class);
+                            userM = u;
+                            LogUtil.d("type=" + type);
+                            LogUtil.d("u=" + u);
+
+
+                            if (1==type && null != u){
+                                LogUtil.d("修改 u=" + u);
+                                et_user_name.setText(u.getName());
+                                et_user_tel.setText(u.getTel());
+                                et_user_age.setText(String.valueOf(u.getAge()));
+                                et_user_address.setText(u.getAddress());
+                                isSexNan = "男".equals(u.getSex());
+                                btn_user_add.setText("修改");
+                            }
+                        }
+                    });
                 }
             });
         }
     }
 
     private void initView() {
+
         et_user_name = (EditText) findViewById(R.id.et_user_name);
         et_user_sex = (EditText) findViewById(R.id.et_user_sex);
         et_user_tel = (EditText) findViewById(R.id.et_user_tel);
         et_user_age = (EditText) findViewById(R.id.et_user_age);
         et_user_address = (EditText) findViewById(R.id.et_user_address);
         et_user_time = (TextView) findViewById(R.id.et_user_time);
+
+        btn_back = (Button) findViewById(R.id.btn_back);
+        btn_user_add = (Button) findViewById(R.id.btn_user_add);
+
 
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy年MM月dd日");
         et_user_time.setText(sdf.format(new Date()));
@@ -75,8 +107,6 @@ public class UserAddActivity extends BaseActivity implements View.OnClickListene
         btn_set_nv.setOnClickListener(this);
         updateSexView();
 
-        btn_back = (Button) findViewById(R.id.btn_back);
-        btn_user_add = (Button) findViewById(R.id.btn_user_add);
         btn_back.setOnClickListener(this);
         btn_user_add.setOnClickListener(this);
     }
@@ -109,6 +139,7 @@ public class UserAddActivity extends BaseActivity implements View.OnClickListene
                     return;
                 }
                 User u = new User();
+                u.setId(userM.getId());
                 u.setName(name);
                 u.setAge(Integer.parseInt(age));
                 u.setTel(tel);
@@ -116,8 +147,13 @@ public class UserAddActivity extends BaseActivity implements View.OnClickListene
                 u.setAddress(et_user_address.getText().toString().trim());
                 u.setInfo(et_user_time.getText().toString());
                 try {
-                    MyApplication.db().save(u);
-                    showToast("添加用户成功！");
+                    if (1==type){
+                        MyApplication.db().saveOrUpdate(u);
+                        showToast("修改用户成功！");
+                    }else {
+                        MyApplication.db().save(u);
+                        showToast("添加用户成功！");
+                    }
                 } catch (DbException e) {
                     e.printStackTrace();
                 }

@@ -81,6 +81,7 @@
                     android:layout_width="50dp"
                     android:layout_height="50dp"
                     android:layout_gravity="center"
+                    android:visibility="invisible"
                     android:background="@drawable/bt_add_bg" />
 
                 <LinearLayout
@@ -93,7 +94,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:gravity="center"
-                        android:text="工作时间"
+                        android:text="MUNBER"
                         android:textColor="#FFFFFF" />
 
                     <TextView
@@ -111,6 +112,7 @@
                     android:layout_width="50dp"
                     android:layout_height="50dp"
                     android:layout_gravity="center"
+                    android:visibility="invisible"
                     android:background="@drawable/bt_reduce_bg" />
             </LinearLayout>
 
@@ -136,7 +138,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:gravity="center"
-                        android:text="强度1"
+                        android:text="POWER"
                         android:textColor="#FFFFFF" />
 
                     <TextView
@@ -178,7 +180,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:gravity="center"
-                        android:text="强度2"
+                        android:text="MOD"
                         android:textColor="#FFFFFF" />
 
                     <TextView

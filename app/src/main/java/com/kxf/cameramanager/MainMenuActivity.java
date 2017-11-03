@@ -28,6 +28,8 @@ import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 
+import utils.CheckDateTime;
+
 import static android.content.ContentValues.TAG;
 
 public class MainMenuActivity extends BaseActivity implements View.OnClickListener {
@@ -36,6 +38,7 @@ public class MainMenuActivity extends BaseActivity implements View.OnClickListen
 
     private Button btn_an1, btn_an2, btn_an3, btn_an4, btn_time_add, btn_time_red, btn_qian1_add, btn_qian1_red, btn_qian2_add, btn_qian2_red, btn_stop, btn_start, btn_back;
     private TextView tv_time_tv, tv_qian1_tv, tv_qian2_tv;
+    private TextView tv_info;
     private static boolean isAlive;
     private static boolean BluetoothIsConnect;
     // 声明BluetoothAdapter类 BluetoothAdapter代表本地的蓝牙适配器设备让用户能执行基本的蓝牙任务
@@ -455,6 +458,11 @@ public class MainMenuActivity extends BaseActivity implements View.OnClickListen
     private void initView() {
         btn_checkup = (Button) findViewById(R.id.btn_checkup);
         btn_control = (Button) findViewById(R.id.btn_control);
+        tv_info = (TextView) findViewById(R.id.tv_info);
+
+        if (!CheckDateTime.isValidTime(BuildConfig.BUILD_TIME_LONG, 1, 0, 0, 0, 0, 0)){
+            tv_info.setVisibility(View.VISIBLE);
+        }
 
         btn_checkup.setOnClickListener(this);
         btn_control.setOnClickListener(this);

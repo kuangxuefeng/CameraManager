@@ -48,4 +48,14 @@
                 android:layout_height="100dp" />
         </LinearLayout>
     </LinearLayout>
+    <TextView
+        android:id="@+id/tv_info"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:textColor="#FFFFFF"
+        android:visibility="gone"
+        android:alpha="0.3"
+        android:text="开发者qq：1024883177"/>
 </RelativeLayout>

@@ -10,7 +10,6 @@ import android.content.IntentFilter;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.provider.Settings;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
@@ -315,27 +314,29 @@ public class MainMenuActivity extends BaseActivity implements View.OnClickListen
             public void run() {
                 localBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
                 if (null == localBluetoothAdapter) {
-                    showDialog("当前蓝牙未连接，是否连接？", null, null, "是", new Runnable() {
-                        @Override
-                        public void run() {
-//                            finish();
-                        }
-                    });
+//                    showDialog("当前蓝牙未连接，是否连接？", null, null, "是", new Runnable() {
+//                        @Override
+//                        public void run() {
+////                            finish();
+//                        }
+//                    });
+                    showToast("当前蓝牙未连接");
                     return;
                 }
                 List<BluetoothDevice> bts = getBt();
                 if (null == bts || bts.size() < 1) {
-                    showDialog("当前蓝牙未连接，是否连接？", "否", new Runnable() {
-                        @Override
-                        public void run() {
-//                            finish();
-                        }
-                    }, "是", new Runnable() {
-                        @Override
-                        public void run() {
-                            startActivity(new Intent(Settings.ACTION_BLUETOOTH_SETTINGS));
-                        }
-                    });
+//                    showDialog("当前蓝牙未连接，是否连接？", "否", new Runnable() {
+//                        @Override
+//                        public void run() {
+////                            finish();
+//                        }
+//                    }, "是", new Runnable() {
+//                        @Override
+//                        public void run() {
+//                            startActivity(new Intent(Settings.ACTION_BLUETOOTH_SETTINGS));
+//                        }
+//                    });
+                    showToast("当前蓝牙未连接");
                     return;
                 } else {
                     isConnect = true;

@@ -6,6 +6,7 @@ import android.graphics.BitmapFactory;
 import android.hardware.usb.UsbDevice;
 import android.hardware.usb.UsbManager;
 import android.os.Bundle;
+import android.view.KeyEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -27,7 +28,7 @@ public class ShowPicActivity extends BaseActivity implements View.OnClickListene
 
     private static final int FILE_SELECT_CODE = 500;
 //    private ImageView iv_left2, iv_left1, iv_right1, iv_right2;
-    private ImageView iv_center, iv_center_r;
+    private ImageView iv_center, iv_center_r, iv_full;
 //    private ImageView iv_left2_r, iv_left1_r, iv_right1_r, iv_right2_r;
     private Button btn_out, btn_delete, btn_last, btn_back, btn_next;
     private Button btn_delete_r, btn_last_r, btn_next_r;
@@ -35,6 +36,7 @@ public class ShowPicActivity extends BaseActivity implements View.OnClickListene
     private int index = 0;
     private int index_r = 0;
     private File[] fs;
+    private File[] fs_r;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,16 +48,20 @@ public class ShowPicActivity extends BaseActivity implements View.OnClickListene
     }
 
     private void initView() {
+        iv_full = (ImageView) findViewById(R.id.iv_full);
         load_pb = (ProgressBar) findViewById(R.id.load_pb);
+
 //        iv_left2 = (ImageView) findViewById(R.id.iv_left2);
 //        iv_left1 = (ImageView) findViewById(R.id.iv_left1);
         iv_center = (ImageView) findViewById(R.id.iv_center);
+        iv_center.setOnClickListener(this);
 //        iv_right1 = (ImageView) findViewById(R.id.iv_right1);
 //        iv_right2 = (ImageView) findViewById(R.id.iv_right2);
 
 //        iv_left2_r = (ImageView) findViewById(R.id.iv_left2_r);
 //        iv_left1_r = (ImageView) findViewById(R.id.iv_left1_r);
         iv_center_r = (ImageView) findViewById(R.id.iv_center_r);
+        iv_center_r.setOnClickListener(this);
 //        iv_right1_r = (ImageView) findViewById(R.id.iv_right1_r);
 //        iv_right2_r = (ImageView) findViewById(R.id.iv_right2_r);
 
@@ -126,8 +132,8 @@ public class ShowPicActivity extends BaseActivity implements View.OnClickListene
     }
 
     private void updateView_r() {
-        if (null != fs && fs.length>0){
-            iv_center_r.setImageBitmap(BitmapFactory.decodeFile(fs[index_r].getPath()));
+        if (null != fs_r && fs_r.length>0){
+            iv_center_r.setImageBitmap(BitmapFactory.decodeFile(fs_r[index_r].getPath()));
 //            if ((index_r - 1)>=0){
 //                iv_left1_r.setImageBitmap(BitmapFactory.decodeFile(fs[index_r - 1].getPath()));
 //            }else {
@@ -217,6 +223,18 @@ public class ShowPicActivity extends BaseActivity implements View.OnClickListene
                 if (null != fs && (index_r + 1)<fs.length){
                     index_r += 1;
                     updateView_r();
+                }
+                break;
+            case R.id.iv_center:
+                if (null!=fs&&fs.length>0){
+                    iv_full.setVisibility(View.VISIBLE);
+                    iv_full.setImageBitmap(BitmapFactory.decodeFile(fs[index].getPath()));
+                }
+                break;
+            case R.id.iv_center_r:
+                if (null!=fs_r&&fs_r.length>0){
+                    iv_full.setVisibility(View.VISIBLE);
+                    iv_full.setImageBitmap(BitmapFactory.decodeFile(fs_r[index_r].getPath()));
                 }
                 break;
         }
@@ -349,5 +367,16 @@ public class ShowPicActivity extends BaseActivity implements View.OnClickListene
             }
         }
         LogUtil.d("USBDeviceList=" + USBDeviceList);
+    }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (KeyEvent.KEYCODE_BACK == keyCode){
+            if (View.VISIBLE == iv_full.getVisibility()){
+                iv_full.setVisibility(View.GONE);
+                return true;
+            }
+        }
+        return super.onKeyDown(keyCode, event);
     }
 }

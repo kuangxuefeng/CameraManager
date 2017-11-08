@@ -4,7 +4,6 @@ import android.app.Application;
 import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Environment;
-import android.util.Log;
 import android.widget.Toast;
 
 import com.kxf.cameramanager.utils.LogUtil;
@@ -28,9 +27,9 @@ public class MyApplication extends Application {
         instance = this;
         x.Ext.init(this);
         LogUtil.e("onCreate()");
-        Log.e("MyApplication", "BuildConfig.buileDateTime=" + BuildConfig.buileDateTime);
-        Log.e("MyApplication", "BuildConfig.VERSION_CODE=" + BuildConfig.VERSION_CODE);
-        Log.e("MyApplication", "BuildConfig.VERSION_NAME=" + BuildConfig.VERSION_NAME);
+        LogUtil.e("BuildConfig.buileDateTime=" + BuildConfig.buileDateTime);
+        LogUtil.e("BuildConfig.VERSION_CODE=" + BuildConfig.VERSION_CODE);
+        LogUtil.e("BuildConfig.VERSION_NAME=" + BuildConfig.VERSION_NAME);
         Thread.setDefaultUncaughtExceptionHandler(new Thread.UncaughtExceptionHandler() {
 
             @Override

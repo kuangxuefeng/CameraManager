@@ -10,6 +10,9 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.PrintWriter;
+import java.io.StringWriter;
+import java.io.Writer;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -41,6 +44,27 @@ public class LogUtil {
             String tag = getModule();
             Log.e(tag, msg);
             writeFile(tag, msg);
+        }
+    }
+
+    public static void e(String msg, Exception e) {
+        if (isOpenLog) {
+            Writer writer = new StringWriter();
+            PrintWriter printWriter = new PrintWriter(writer);
+            e.printStackTrace(printWriter);
+            Throwable cause = e.getCause();
+            while (cause != null) {
+                cause.printStackTrace(printWriter);
+                cause = cause.getCause();
+            }
+            printWriter.close();
+            String result = writer.toString();
+
+            String tag = getModule();
+            Log.e(tag, msg);
+            writeFile(tag, msg);
+            Log.e(tag, result);
+            writeFile(tag, result);
         }
     }
 

@@ -124,6 +124,7 @@ public class BaseActivity extends Activity {
     }
 
     protected void showDialog(final String msg, final String leftButtonTitle, final Runnable leftRun, final String rightButtonTitle, final Runnable rightRun) {
+        LogUtil.i(msg);
         mActivity.runOnUiThread(new Runnable() {
             @Override
             public void run() {
@@ -165,6 +166,7 @@ public class BaseActivity extends Activity {
     }
 
     protected void showToast(final String msg){
+        LogUtil.i(msg);
         runOnUiThread(new Runnable() {
             @Override
             public void run() {

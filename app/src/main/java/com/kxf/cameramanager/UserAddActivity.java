@@ -139,7 +139,9 @@ public class UserAddActivity extends BaseActivity implements View.OnClickListene
                     return;
                 }
                 User u = new User();
-                u.setId(userM.getId());
+                if (1==type){
+                    u.setId(userM.getId());
+                }
                 u.setName(name);
                 u.setAge(Integer.parseInt(age));
                 u.setTel(tel);

@@ -16,6 +16,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.kxf.cameramanager.utils.DeviceInfoUtil;
 import com.kxf.cameramanager.utils.LogUtil;
 
 import java.io.IOException;
@@ -177,7 +178,7 @@ public class MainMenuActivity extends BaseActivity implements View.OnClickListen
                                 outStream.flush();
                             } catch (Exception e) {
                                 e.printStackTrace();
-                                LogUtil.e("发送出错！");
+                                LogUtil.e("发送出错！", e);
                                 isConnect = false;
 //								closeBT();
 //								checkBTCon();
@@ -295,6 +296,7 @@ public class MainMenuActivity extends BaseActivity implements View.OnClickListen
             }
         } catch (Exception e) {
             e.printStackTrace();
+            LogUtil.e("获取蓝牙设备异常", e);
         }
         LogUtil.i("deviceList=" + deviceList);
         return deviceList;
@@ -347,12 +349,15 @@ public class MainMenuActivity extends BaseActivity implements View.OnClickListen
                 }
                 try {
                     btSocket = (BluetoothSocket) btDevice.getClass().getMethod("createRfcommSocket", new Class[]{int.class}).invoke(btDevice, 1);
-                } catch (IllegalAccessException e1) {
-                    e1.printStackTrace();
-                } catch (InvocationTargetException e1) {
-                    e1.printStackTrace();
-                } catch (NoSuchMethodException e1) {
-                    e1.printStackTrace();
+                } catch (IllegalAccessException e) {
+                    e.printStackTrace();
+                    LogUtil.e("IllegalAccessException", e);
+                } catch (InvocationTargetException e) {
+                    e.printStackTrace();
+                    LogUtil.e("InvocationTargetException", e);
+                } catch (NoSuchMethodException e) {
+                    e.printStackTrace();
+                    LogUtil.e("NoSuchMethodException", e);
                 }
                 connect();
             }
@@ -371,8 +376,9 @@ public class MainMenuActivity extends BaseActivity implements View.OnClickListen
 //		}
                 try {
                     btSocket.connect();
-                } catch (IOException e1) {
-                    e1.printStackTrace();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                    LogUtil.e("IOException", e);
                 }
                 LogUtil.i("btSocket.isConnected()=" + btSocket.isConnected());
                 if (!btSocket.isConnected()) {
@@ -388,6 +394,7 @@ public class MainMenuActivity extends BaseActivity implements View.OnClickListen
                     new Thread(new Connect()).start();
                 } catch (IOException e) {
                     e.printStackTrace();
+                    LogUtil.e("IOException", e);
                     showToast("连接失败");
                 }
             }
@@ -441,6 +448,7 @@ public class MainMenuActivity extends BaseActivity implements View.OnClickListen
                     handler.obtainMessage(2000, byte2HexStr(buffer)).sendToTarget();
                 } catch (IOException e) {
                     e.printStackTrace();
+                    LogUtil.e("IOException", e);
                 }
             }
         }
@@ -452,6 +460,14 @@ public class MainMenuActivity extends BaseActivity implements View.OnClickListen
         setContentView(R.layout.activity_main_menu);
         if (isWindowChanged) {
             initView();
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    LogUtil.i("DeviceInfoUtil.getMacAddress(mContext)=" + DeviceInfoUtil.getMacAddress(mContext));
+                    LogUtil.i("DeviceInfoUtil.getBlueToothAddress()=" + DeviceInfoUtil.getBlueToothAddress());
+                    LogUtil.i("DeviceInfoUtil.getInfo()=" + DeviceInfoUtil.getInfo());
+                }
+            }).start();
         }
     }
 

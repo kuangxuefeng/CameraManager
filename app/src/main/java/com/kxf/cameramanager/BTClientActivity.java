@@ -18,7 +18,7 @@ public class BTClientActivity extends BaseActivity implements OnClickListener {
 	private Button btn_an1, btn_an2, btn_an3, btn_an4, btn_time_add, btn_time_red
 			, btn_qian1_add, btn_qian1_red, btn_qian2_add, btn_qian2_red
 			, btn_stop, btn_start, btn_back;
-	private TextView tv_time_tv, tv_qian1_tv, tv_qian2_tv;
+	private TextView tv_time_tv, tv_qian1_tv, tv_qian2_tv, tv_bom_tv;
 	private ConnectedThread mConnectedThread;
 	/** Called when the activity is first created. */
 	@Override
@@ -65,6 +65,7 @@ public class BTClientActivity extends BaseActivity implements OnClickListener {
 		tv_time_tv = (TextView) findViewById(R.id.tv_time_tv);
 		tv_qian1_tv = (TextView) findViewById(R.id.tv_qian1_tv);
 		tv_qian2_tv = (TextView) findViewById(R.id.tv_qian2_tv);
+		tv_bom_tv = (TextView) findViewById(R.id.tv_bom_tv);
 	}
 
 	Handler handler = new Handler() {
@@ -107,13 +108,16 @@ public class BTClientActivity extends BaseActivity implements OnClickListener {
 //						btn_qian2_red.setSelected(true);
 //						btn_qian2_red.setEnabled(false);
 //					}
-					else if (isStartWith(re, "A155048001000600")){
+					else if (isStartWith(re, "A155058200310100")){
 						tv_time_tv.setText(re.substring(re.length()-2));
-					} else if (isStartWith(re, "A155048001000900")){
+					} else if (isStartWith(re, "A155058200320100")){
 						tv_qian1_tv.setText(re.substring(re.length()-2));
-					} else if (isStartWith(re, "A155048001000C00")){
+					} else if (isStartWith(re, "A155058200330100")){
 						tv_qian2_tv.setText(re.substring(re.length()-2));
-					} else if ("A15504800100140002".equals(re)){
+					} else if (isStartWith(re, "A155058200340100")){
+						tv_bom_tv.setText(re.substring(re.length()-2));
+					}
+					else if ("A15504800100140002".equals(re)){
 						btn_start.setSelected(true);
 						btn_start.setEnabled(false);
 					} else if ("A15504800100150002".equals(re)){
@@ -163,16 +167,16 @@ public class BTClientActivity extends BaseActivity implements OnClickListener {
 		LogUtil.d("v=" + v);
 		switch (v.getId()){
 			case R.id.btn_an1:
-				sendByBT("A15504800100010001");
+				sendByBT("A15506830055010001");
 				break;
 			case R.id.btn_an2:
-				sendByBT("A15504800100020001");
+				sendByBT("A15506830055010002");
 				break;
 			case R.id.btn_an3:
-				sendByBT("A15504800100030001");
+				sendByBT("A15506830055010003");
 				break;
 			case R.id.btn_an4:
-				sendByBT("A15504800100040001");
+				sendByBT("A15506830055010004");
 				break;
 			case R.id.btn_time_add:
 				sendByBT("A15504800100050001");
@@ -181,25 +185,25 @@ public class BTClientActivity extends BaseActivity implements OnClickListener {
 				sendByBT("A15504800100070001");
 				break;
 			case R.id.btn_qian1_add:
-				sendByBT("A15504800100080001");
+				sendByBT("A15506830055010005");
 				break;
 			case R.id.btn_qian1_red:
-				sendByBT("A155048001000A0001");
+				sendByBT("A15506830055010007");
 				break;
 			case R.id.btn_qian2_add:
-				sendByBT("A155048001000B0001");
+				sendByBT("A15506830055010006");
 				break;
 			case R.id.btn_qian2_red:
-				sendByBT("A155048001000D0001");
+				sendByBT("A15506830055010008");
 				break;
 			case R.id.btn_stop:
-				sendByBT("A15504800100150001");
+				sendByBT("A1550683005B010002");
 				break;
 			case R.id.btn_start:
-				sendByBT("A15504800100140001");
+				sendByBT("A1550683005B010001");
 				break;
 			case R.id.btn_back:
-				sendByBT("A155048001000F0001");
+				sendByBT("A1550683005B010003");
 				break;
 		}
 	}

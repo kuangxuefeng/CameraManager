@@ -7,6 +7,7 @@ import com.kxf.cameramanager.utils.LogUtil;
 public class BluetoothUtils {
 	public final static int MESSAGE_READ = 2000;
 	public final static int MESSAGE_WRITE = 2001;
+	public final static int MESSAGE_ERROR = -1000;
 	private static BluetoothSocket mmSocket = null;
 	
 	public static void setBluetoothSocket(BluetoothSocket socket) {

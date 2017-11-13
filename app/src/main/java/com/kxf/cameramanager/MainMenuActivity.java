@@ -68,7 +68,11 @@ public class MainMenuActivity extends BaseActivity implements View.OnClickListen
                         }
                     }).start();
                     break;
-                case 2002:
+                case BluetoothUtils.MESSAGE_ERROR:
+                    //进入蓝牙设备连接界面
+                    Intent intent = new Intent();
+                    intent.setClass(mContext, DevicesListActivity.class);
+                    startActivity(intent);
                     break;
                 default:
                     break;
@@ -107,7 +111,7 @@ public class MainMenuActivity extends BaseActivity implements View.OnClickListen
             // 获取蓝牙适配器
             mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
             if (mBluetoothAdapter == null) {
-                Toast.makeText(getApplicationContext(), "该设备不支持蓝牙", Toast.LENGTH_SHORT).show();
+                Toast.makeText(mContext, "该设备不支持蓝牙", Toast.LENGTH_SHORT).show();
             }
 
             //请求开启蓝牙
@@ -116,10 +120,12 @@ public class MainMenuActivity extends BaseActivity implements View.OnClickListen
                 startActivityForResult(enableBtIntent, REQUEST_ENABLE_BT);
             }
 
-            //进入蓝牙设备连接界面
-            Intent intent = new Intent();
-            intent.setClass(getApplicationContext(), DevicesListActivity.class);
-            startActivity(intent);
+            if (null == BluetoothUtils.getBluetoothSocket()){
+                //进入蓝牙设备连接界面
+                Intent intent = new Intent();
+                intent.setClass(mContext, DevicesListActivity.class);
+                startActivity(intent);
+            }
         }
     }
 

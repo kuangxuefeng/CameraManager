@@ -2,6 +2,7 @@ package com.kxf.cameramanager;
 
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
+import android.bluetooth.BluetoothServerSocket;
 import android.bluetooth.BluetoothSocket;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -38,18 +39,58 @@ public class DevicesListActivity extends BaseActivity {
     private List<BluetoothDevice> deviceList = new ArrayList<BluetoothDevice>();
     private List<String> deviceAddressList = new ArrayList<String>();
     private boolean isConnecting = false;
+    private boolean isAlive = false;
     private BluetoothSocket socket = null;
     private TextView tv_info;
+    private static final UUID MY_UUID = UUID.fromString("00001101-0000-1000-8000-00805F9B34FB");
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (isWindowChanged){
+            isAlive = true;
             setContentView(R.layout.listview_devices);
             ListView listView = (ListView) findViewById(R.id.listview_devices);
             tv_info = (TextView) findViewById(R.id.tv_info);
             progressbarSearchDevices = (ProgressBar) findViewById(R.id.progressbar_search_devices);
             mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
+
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    BluetoothServerSocket btss = null;
+                    try {
+                        btss = mBluetoothAdapter.listenUsingRfcommWithServiceRecord(getPackageName(), MY_UUID);
+                        while (isAlive){
+                            LogUtil.i("等待蓝牙接入");
+                            BluetoothSocket so = btss.accept();
+                            if (null != so){
+                                LogUtil.i("蓝牙接入成功");
+                                showToast("蓝牙接入成功");
+
+                                BluetoothUtils.setBluetoothSocket(so);
+                                btss.close();
+                                mActivity.runOnUiThread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        progressbarSearchDevices.setVisibility(View.INVISIBLE);
+                                        // 连接成功，返回主界面
+                                        finish();
+                                    }
+                                });
+                                break;
+                            }
+                        }
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                        try {
+                            btss.close();
+                        } catch (IOException e1) {
+                            e1.printStackTrace();
+                        }
+                    }
+                }
+            }).start();
 
             // 将已配对的设备添加到列表中
             Set<BluetoothDevice> pairedDevices = mBluetoothAdapter.getBondedDevices();
@@ -80,6 +121,7 @@ public class DevicesListActivity extends BaseActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        isAlive = false;
         if (isWindowChanged){
             unregisterReceiver(mReceiver);
         }
@@ -147,67 +189,7 @@ public class DevicesListActivity extends BaseActivity {
             holder.deviceName.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    LogUtil.i("开始连接bt");
-                    if (isConnecting){
-                        return;
-                    }
-                    isConnecting = true;
-                    new Thread(new Runnable() {
-                        @Override
-                        public void run() {
-                            BluetoothDevice device = deviceList.get(position);
-                            updateTvInfo("正在连接" + device.getName() + "...");
-                            try {
-                                // 蓝牙串口服务对应的UUID。如使用的是其它蓝牙服务，需更改下面的字符串
-                                UUID MY_UUID = UUID.fromString("00001101-0000-1000-8000-00805F9B34FB");
-                                socket = device.createRfcommSocketToServiceRecord(MY_UUID);
-                            } catch (Exception e) {
-                                LogUtil.e("获取Socket失败", e);
-                                e.printStackTrace();
-                                showToast("获取Socket失败");
-                                updateTvInfo("连接" + device.getName() + "失败！");
-                                isConnecting = false;
-                                return;
-                            }
-                            mBluetoothAdapter.cancelDiscovery();
-                            new Thread(new Runnable() {
-                                @Override
-                                public void run() {
-                                    try {
-                                        // Connect the device through the socket. This will block
-                                        // until it succeeds or throws an exception
-                                        socket.connect();
-                                        LogUtil.i("连接成功");
-                                        showToast("连接成功");
-                                        BluetoothUtils.setBluetoothSocket(socket);
-                                        mActivity.runOnUiThread(new Runnable() {
-                                            @Override
-                                            public void run() {
-                                                progressbarSearchDevices.setVisibility(View.INVISIBLE);
-                                                isConnecting = false;
-                                                // 连接成功，返回主界面
-                                                finish();
-                                            }
-                                        });
-                                    } catch (IOException e) {
-                                        e.printStackTrace();
-                                        // Unable to connect; close the socket and get out
-                                        LogUtil.e("连接失败", e);
-                                        updateTvInfo("连接失败");
-                                        try {
-                                            socket.close();
-                                        } catch (IOException e1) {
-                                            e1.printStackTrace();
-                                            LogUtil.e("IOException", e1);
-                                        }
-                                        isConnecting = false;
-                                        return;
-                                    }
-                                    isConnecting = false;
-                                }
-                            }).start();
-                        }
-                    }).start();
+                    connectBT(deviceList.get(position));
                 }
             });
             return convertView;
@@ -217,6 +199,68 @@ public class DevicesListActivity extends BaseActivity {
             TextView deviceName;
         }
 
+    }
+
+    private void connectBT(final BluetoothDevice device){
+        LogUtil.i("开始连接bt device=" + device.toString());
+        if (isConnecting){
+            return;
+        }
+        isConnecting = true;
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                updateTvInfo("正在连接" + device.getName() + "...");
+                try {
+                    // 蓝牙串口服务对应的UUID。如使用的是其它蓝牙服务，需更改下面的字符串
+                    socket = device.createRfcommSocketToServiceRecord(MY_UUID);
+                } catch (Exception e) {
+                    LogUtil.e("获取Socket失败", e);
+                    e.printStackTrace();
+                    showToast("获取Socket失败");
+                    updateTvInfo("连接" + device.getName() + "失败！");
+                    isConnecting = false;
+                    return;
+                }
+                mBluetoothAdapter.cancelDiscovery();
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        try {
+                            // Connect the device through the socket. This will block
+                            // until it succeeds or throws an exception
+                            socket.connect();
+                            LogUtil.i("连接成功");
+                            showToast("连接成功");
+                            BluetoothUtils.setBluetoothSocket(socket);
+                            mActivity.runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    progressbarSearchDevices.setVisibility(View.INVISIBLE);
+                                    isConnecting = false;
+                                    // 连接成功，返回主界面
+                                    finish();
+                                }
+                            });
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                            // Unable to connect; close the socket and get out
+                            LogUtil.e("连接失败", e);
+                            updateTvInfo("连接失败");
+                            try {
+                                socket.close();
+                            } catch (IOException e1) {
+                                e1.printStackTrace();
+                                LogUtil.e("IOException", e1);
+                            }
+                            isConnecting = false;
+                            return;
+                        }
+                        isConnecting = false;
+                    }
+                }).start();
+            }
+        }).start();
     }
 
     private void updateTvInfo(final String s){

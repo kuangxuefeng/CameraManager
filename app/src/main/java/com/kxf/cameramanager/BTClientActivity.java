@@ -139,7 +139,11 @@ public class BTClientActivity extends BaseActivity implements OnClickListener {
 						}
 					}).start();
 					break;
-				case 2002:
+				case BluetoothUtils.MESSAGE_ERROR:
+					//进入蓝牙设备连接界面
+					Intent intent = new Intent();
+					intent.setClass(mContext, DevicesListActivity.class);
+					startActivity(intent);
 					break;
 				default:
 					break;

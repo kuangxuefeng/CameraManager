@@ -22,7 +22,7 @@ public class ConnectedThread extends Thread {
 
     public static ConnectedThread instance;
 
-    public void setMHandler(Handler handler){
+    public void setMHandler(Handler handler) {
         mHandler = handler;
     }
 
@@ -47,21 +47,28 @@ public class ConnectedThread extends Thread {
 
     public void run() {
 
-        int bytes; // bytes returned from read()
+        int len; // len returned from read()
 
         // Keep listening to the InputStream until an exception occurs
         while (true) {
-            byte[] buffer = new byte[100];
+            byte[] buffer = new byte[1024];
             try {
+                LogUtil.i("准备接收数据！");
                 // Read from the InputStream
-                bytes = mmInStream.read(buffer);
-                // Send the obtained bytes to the UI activity
-                if (null != mHandler){
-                    mHandler.obtainMessage(BluetoothUtils.MESSAGE_READ, bytes, -1, BluetoothUtils.byte2HexStr(buffer))
+                len = mmInStream.read(buffer);
+                // Send the obtained len to the UI activity
+                byte[] bufferR = new byte[len];
+                System.arraycopy(buffer, 0, bufferR, 0, len);
+                String s = BluetoothUtils.byte2HexStr(bufferR);
+                LogUtil.i("接收到数据：" + s);
+                if (null != mHandler) {
+                    mHandler.obtainMessage(BluetoothUtils.MESSAGE_READ, len, -1, s)
                             .sendToTarget();
                 }
             } catch (IOException e) {
                 LogUtil.e("IOException", e);
+                mHandler.obtainMessage(BluetoothUtils.MESSAGE_ERROR)
+                        .sendToTarget();
                 break;
             }
         }
@@ -71,9 +78,12 @@ public class ConnectedThread extends Thread {
     public void write(byte[] bytes) {
         try {
             mmOutStream.write(bytes);
+            mmOutStream.flush();
             LogUtil.i("发送成功，发送字节：" + bytes.length);
         } catch (IOException e) {
             LogUtil.e("IOException", e);
+            mHandler.obtainMessage(BluetoothUtils.MESSAGE_ERROR)
+                    .sendToTarget();
         }
     }
 
@@ -81,7 +91,8 @@ public class ConnectedThread extends Thread {
     public void cancel() {
         try {
             mmSocket.close();
-        } catch (IOException e) { }
+        } catch (IOException e) {
+        }
     }
 
 }

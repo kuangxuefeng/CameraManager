@@ -67,6 +67,12 @@ public class ConnectedThread extends Thread {
                 }
             } catch (IOException e) {
                 LogUtil.e("IOException", e);
+                ConnectedThread.instance = null;
+                try {
+                    mmSocket.close();
+                } catch (Exception e1) {
+                    e1.printStackTrace();
+                }
                 mHandler.obtainMessage(BluetoothUtils.MESSAGE_ERROR)
                         .sendToTarget();
                 break;
@@ -82,6 +88,12 @@ public class ConnectedThread extends Thread {
             LogUtil.i("发送成功，发送字节：" + bytes.length);
         } catch (IOException e) {
             LogUtil.e("IOException", e);
+            ConnectedThread.instance = null;
+            try {
+                mmSocket.close();
+            } catch (Exception e1) {
+                e1.printStackTrace();
+            }
             mHandler.obtainMessage(BluetoothUtils.MESSAGE_ERROR)
                     .sendToTarget();
         }

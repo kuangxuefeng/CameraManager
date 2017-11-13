@@ -29,7 +29,7 @@ public class MainMenuActivity extends BaseActivity implements View.OnClickListen
 //		checkBTCon();
         if (isWindowChanged) {
             //回到主界面后检查是否已成功连接蓝牙设备
-            if (BluetoothUtils.getBluetoothSocket() == null || mConnectedThread != null) {
+            if (BluetoothUtils.getBluetoothSocket() == null || (mConnectedThread != null && ConnectedThread.instance != null)) {
 //                txtIsConnected.setText("未连接");
                 return;
             }
@@ -51,7 +51,7 @@ public class MainMenuActivity extends BaseActivity implements View.OnClickListen
             switch (msg.what) {
                 case BluetoothUtils.MESSAGE_READ:
                     String re = (String) msg.obj;
-                    if ("A15504800100010002".equals(re)) {
+                    if ("A15506830080010001".equals(re)) {
                         ConnectedThread.instance.setMHandler(null);
                         Intent intent = new Intent(mActivity, BTClientActivity.class);
                         startActivity(intent);

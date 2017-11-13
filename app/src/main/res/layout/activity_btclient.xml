@@ -81,8 +81,8 @@
                     android:layout_width="50dp"
                     android:layout_height="50dp"
                     android:layout_gravity="center"
-                    android:visibility="invisible"
-                    android:background="@drawable/bt_add_bg" />
+                    android:background="@drawable/bt_add_bg"
+                    android:visibility="invisible" />
 
                 <LinearLayout
                     android:layout_width="wrap_content"
@@ -101,10 +101,10 @@
                         android:id="@+id/tv_time_tv"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:background="@drawable/shape_et_bg_null"
                         android:gravity="center"
                         android:text="0"
-                        android:textColor="#FFFFFF"
-                        android:background="@drawable/shape_et_bg_null" />
+                        android:textColor="#FFFFFF" />
                 </LinearLayout>
 
                 <Button
@@ -112,8 +112,8 @@
                     android:layout_width="50dp"
                     android:layout_height="50dp"
                     android:layout_gravity="center"
-                    android:visibility="invisible"
-                    android:background="@drawable/bt_reduce_bg" />
+                    android:background="@drawable/bt_reduce_bg"
+                    android:visibility="invisible" />
             </LinearLayout>
 
             <LinearLayout
@@ -145,10 +145,10 @@
                         android:id="@+id/tv_qian1_tv"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:background="@drawable/shape_et_bg_null"
                         android:gravity="center"
                         android:text="0"
-                        android:textColor="#FFFFFF"
-                        android:background="@drawable/shape_et_bg_null" />
+                        android:textColor="#FFFFFF" />
                 </LinearLayout>
 
                 <Button
@@ -158,6 +158,7 @@
                     android:layout_gravity="center"
                     android:background="@drawable/bt_reduce_bg" />
             </LinearLayout>
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -187,10 +188,10 @@
                         android:id="@+id/tv_qian2_tv"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:background="@drawable/shape_et_bg_null"
                         android:gravity="center"
                         android:text="0"
-                        android:textColor="#FFFFFF"
-                        android:background="@drawable/shape_et_bg_null" />
+                        android:textColor="#FFFFFF" />
                 </LinearLayout>
 
                 <Button
@@ -206,9 +207,9 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="60dp"
+        android:layout_marginBottom="10dp"
         android:layout_marginLeft="50dp"
         android:layout_marginRight="50dp"
-        android:layout_marginBottom="10dp"
         android:layout_weight="0">
 
         <Button
@@ -236,5 +237,16 @@
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
             android:text="返回" />
+
+        <TextView
+            android:id="@+id/tv_bom_tv"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_toLeftOf="@+id/btn_back"
+            android:layout_toRightOf="@+id/btn_stop"
+            android:background="@drawable/shape_et_bg_null"
+            android:gravity="center"
+            android:text="0"
+            android:textColor="#FFFFFF" />
     </RelativeLayout>
 </LinearLayout>

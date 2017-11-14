@@ -9,9 +9,13 @@ public class BluetoothUtils {
 	public final static int MESSAGE_WRITE = 2001;
 	public final static int MESSAGE_ERROR = -1000;
 	private static BluetoothSocket mmSocket = null;
+	public static ConnectedThread btThreadInstance = null;
 	
 	public static void setBluetoothSocket(BluetoothSocket socket) {
 		mmSocket = socket;
+		//启动蓝牙数据收发线程
+		btThreadInstance = new ConnectedThread(BluetoothUtils.getBluetoothSocket(), null);
+		btThreadInstance.start();
 	}
 	
 	public static BluetoothSocket getBluetoothSocket() {

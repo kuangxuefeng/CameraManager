@@ -20,8 +20,6 @@ public class ConnectedThread extends Thread {
     private final OutputStream mmOutStream;
     private Handler mHandler;
 
-    public static ConnectedThread instance;
-
     public void setMHandler(Handler handler) {
         mHandler = handler;
     }
@@ -67,7 +65,7 @@ public class ConnectedThread extends Thread {
                 }
             } catch (IOException e) {
                 LogUtil.e("IOException", e);
-                ConnectedThread.instance = null;
+                BluetoothUtils.btThreadInstance = null;
                 try {
                     mmSocket.close();
                 } catch (Exception e1) {
@@ -81,22 +79,27 @@ public class ConnectedThread extends Thread {
     }
 
     /* Call this from the main activity to send data to the remote device */
-    public void write(byte[] bytes) {
-        try {
-            mmOutStream.write(bytes);
-            mmOutStream.flush();
-            LogUtil.i("发送成功，发送字节：" + bytes.length);
-        } catch (IOException e) {
-            LogUtil.e("IOException", e);
-            ConnectedThread.instance = null;
-            try {
-                mmSocket.close();
-            } catch (Exception e1) {
-                e1.printStackTrace();
+    public void write(final byte[] bytes) {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    mmOutStream.write(bytes);
+                    mmOutStream.flush();
+                    LogUtil.i("发送成功，发送字节：" + bytes.length);
+                } catch (IOException e) {
+                    LogUtil.e("IOException", e);
+                    BluetoothUtils.btThreadInstance = null;
+                    try {
+                        mmSocket.close();
+                    } catch (Exception e1) {
+                        e1.printStackTrace();
+                    }
+                    mHandler.obtainMessage(BluetoothUtils.MESSAGE_ERROR)
+                            .sendToTarget();
+                }
             }
-            mHandler.obtainMessage(BluetoothUtils.MESSAGE_ERROR)
-                    .sendToTarget();
-        }
+        }).start();
     }
 
     /* Call this from the main activity to shutdown the connection */

@@ -21,7 +21,6 @@ public class MainMenuActivity extends BaseActivity implements View.OnClickListen
     private Button btn_checkup, btn_control;
     private TextView tv_info;
     private BluetoothAdapter mBluetoothAdapter;
-    private ConnectedThread mConnectedThread;
 
     @Override
     protected void onResume() {
@@ -29,17 +28,9 @@ public class MainMenuActivity extends BaseActivity implements View.OnClickListen
 //		checkBTCon();
         if (isWindowChanged) {
             //回到主界面后检查是否已成功连接蓝牙设备
-            if (BluetoothUtils.getBluetoothSocket() == null || (mConnectedThread != null && ConnectedThread.instance != null)) {
-//                txtIsConnected.setText("未连接");
-                return;
+            if (BluetoothUtils.btThreadInstance != null) {
+                BluetoothUtils.btThreadInstance.setMHandler(handler);
             }
-
-//            txtIsConnected.setText("已连接");
-
-            //启动蓝牙数据收发线程
-            mConnectedThread = new ConnectedThread(BluetoothUtils.getBluetoothSocket(), handler);
-            ConnectedThread.instance = mConnectedThread;
-            mConnectedThread.start();
         }
     }
 
@@ -52,21 +43,16 @@ public class MainMenuActivity extends BaseActivity implements View.OnClickListen
                 case BluetoothUtils.MESSAGE_READ:
                     String re = (String) msg.obj;
                     if ("A15506830080010001".equals(re)) {
-                        ConnectedThread.instance.setMHandler(null);
+                        BluetoothUtils.btThreadInstance.setMHandler(null);
                         Intent intent = new Intent(mActivity, BTClientActivity.class);
                         startActivity(intent);
                     }
                     break;
                 case BluetoothUtils.MESSAGE_WRITE:
-                    final String send = (String) msg.obj;
-                    new Thread(new Runnable() {
-                        @Override
-                        public void run() {
-                            if (null != mConnectedThread){
-                                mConnectedThread.write(BluetoothUtils.getHexBytes(send));
-                            }
-                        }
-                    }).start();
+                    String send = (String) msg.obj;
+                    if (null != BluetoothUtils.btThreadInstance){
+                        BluetoothUtils.btThreadInstance.write(BluetoothUtils.getHexBytes(send));
+                    }
                     break;
                 case BluetoothUtils.MESSAGE_ERROR:
                     //进入蓝牙设备连接界面

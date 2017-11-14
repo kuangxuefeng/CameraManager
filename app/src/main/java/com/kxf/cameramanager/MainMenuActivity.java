@@ -17,7 +17,7 @@ import com.kxf.cameramanager.utils.LogUtil;
 import utils.CheckDateTime;
 
 public class MainMenuActivity extends BaseActivity implements View.OnClickListener {
-    private static final int REQUEST_ENABLE_BT = 1;
+    private static final int REQUEST_ENABLE_BT = 1827;
     private Button btn_checkup, btn_control;
     private TextView tv_info;
     private BluetoothAdapter mBluetoothAdapter;
@@ -104,13 +104,13 @@ public class MainMenuActivity extends BaseActivity implements View.OnClickListen
             if (!mBluetoothAdapter.isEnabled()) {
                 Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
                 startActivityForResult(enableBtIntent, REQUEST_ENABLE_BT);
-            }
-
-            if (null == BluetoothUtils.getBluetoothSocket()){
-                //进入蓝牙设备连接界面
-                Intent intent = new Intent();
-                intent.setClass(mContext, DevicesListActivity.class);
-                startActivity(intent);
+            }else {
+                if (null == BluetoothUtils.getBluetoothSocket()){
+                    //进入蓝牙设备连接界面
+                    Intent intent = new Intent();
+                    intent.setClass(mContext, DevicesListActivity.class);
+                    startActivity(intent);
+                }
             }
         }
     }
@@ -146,5 +146,21 @@ public class MainMenuActivity extends BaseActivity implements View.OnClickListen
         }
         btn_checkup.setEnabled(true);
         btn_control.setEnabled(true);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        LogUtil.i("requestCode=" + requestCode);
+        switch (requestCode){
+            case REQUEST_ENABLE_BT:
+                if (null == BluetoothUtils.getBluetoothSocket()){
+                    //进入蓝牙设备连接界面
+                    Intent intent = new Intent();
+                    intent.setClass(mContext, DevicesListActivity.class);
+                    startActivity(intent);
+                }
+                break;
+        }
     }
 }

@@ -11,6 +11,7 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.kxf.cameramanager.utils.CheckDateUtils;
 import com.kxf.cameramanager.utils.DeviceInfoUtil;
 import com.kxf.cameramanager.utils.LogUtil;
 
@@ -39,6 +40,7 @@ public class MainMenuActivity extends BaseActivity implements View.OnClickListen
         @Override
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
+            LogUtil.i("msg=" + msg);
             switch (msg.what) {
                 case BluetoothUtils.MESSAGE_READ:
                     String re = (String) msg.obj;
@@ -52,6 +54,8 @@ public class MainMenuActivity extends BaseActivity implements View.OnClickListen
                     String send = (String) msg.obj;
                     if (null != BluetoothUtils.btThreadInstance){
                         BluetoothUtils.btThreadInstance.write(BluetoothUtils.getHexBytes(send));
+                    }else {
+                        handler.sendEmptyMessage(BluetoothUtils.MESSAGE_ERROR);
                     }
                     break;
                 case BluetoothUtils.MESSAGE_ERROR:
@@ -93,6 +97,20 @@ public class MainMenuActivity extends BaseActivity implements View.OnClickListen
                     LogUtil.i("DeviceInfoUtil.getInfo()=" + DeviceInfoUtil.getInfo());
                 }
             }).start();
+
+            if (BuildConfig.needCheckDate){
+                CheckDateUtils.checkDate(this, new CheckDateUtils.DateOutListen() {
+                    @Override
+                    public void out() {
+                        showDialog("版本已过期，请联系开发人员！", "确定", new Runnable() {
+                            @Override
+                            public void run() {
+                                finish();
+                            }
+                        }, null, null);
+                    }
+                });
+            }
 
             // 获取蓝牙适配器
             mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
@@ -161,6 +179,17 @@ public class MainMenuActivity extends BaseActivity implements View.OnClickListen
                     startActivity(intent);
                 }
                 break;
+        }
+    }
+
+    @Override
+    public void finish() {
+        super.finish();
+        if (isWindowChanged) {
+            //回到主界面后检查是否已成功连接蓝牙设备
+            if (BluetoothUtils.btThreadInstance != null) {
+                BluetoothUtils.btThreadInstance.setMHandler(null);
+            }
         }
     }
 }

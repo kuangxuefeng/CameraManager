@@ -30,6 +30,7 @@ public class MyApplication extends Application {
         LogUtil.e("BuildConfig.buileDateTime=" + BuildConfig.buileDateTime);
         LogUtil.e("BuildConfig.VERSION_CODE=" + BuildConfig.VERSION_CODE);
         LogUtil.e("BuildConfig.VERSION_NAME=" + BuildConfig.VERSION_NAME);
+        LogUtil.e("BuildConfig.needCheckDate=" + BuildConfig.needCheckDate);
         Thread.setDefaultUncaughtExceptionHandler(new Thread.UncaughtExceptionHandler() {
 
             @Override

@@ -2,6 +2,7 @@ package com.kxf.cameramanager;
 
 import android.bluetooth.BluetoothSocket;
 import android.os.Handler;
+import android.text.TextUtils;
 
 import com.kxf.cameramanager.utils.LogUtil;
 
@@ -19,6 +20,7 @@ public class ConnectedThread extends Thread {
     private final InputStream mmInStream;
     private final OutputStream mmOutStream;
     private Handler mHandler;
+    private String cacheString;
 
     public void setMHandler(Handler handler) {
         mHandler = handler;
@@ -58,10 +60,13 @@ public class ConnectedThread extends Thread {
                 byte[] bufferR = new byte[len];
                 System.arraycopy(buffer, 0, bufferR, 0, len);
                 String s = BluetoothUtils.byte2HexStr(bufferR);
-                LogUtil.i("接收到数据：" + s);
-                if (null != mHandler) {
-                    mHandler.obtainMessage(BluetoothUtils.MESSAGE_READ, len, -1, s)
+                LogUtil.i("接收到数据["+ len +"]：" + s);
+                LogUtil.i("mHandler=" + mHandler);
+                if (null != mHandler && readSuccess(s)) {
+                    LogUtil.i("readSuccess cacheString=" + cacheString);
+                    mHandler.obtainMessage(BluetoothUtils.MESSAGE_READ, cacheString.length(), -1, cacheString)
                             .sendToTarget();
+                    cacheString = null;
                 }
             } catch (IOException e) {
                 LogUtil.e("IOException", e);
@@ -71,11 +76,29 @@ public class ConnectedThread extends Thread {
                 } catch (Exception e1) {
                     e1.printStackTrace();
                 }
-                mHandler.obtainMessage(BluetoothUtils.MESSAGE_ERROR)
-                        .sendToTarget();
+                LogUtil.i("mHandler=" + mHandler);
+                if (null != mHandler){
+                    mHandler.obtainMessage(BluetoothUtils.MESSAGE_ERROR)
+                            .sendToTarget();
+                }
                 break;
             }
         }
+    }
+
+    private boolean readSuccess(String s){
+        LogUtil.i("cacheString=" + cacheString + ";s=" + s);
+        boolean re = false;
+        if (TextUtils.isEmpty(cacheString)){
+            cacheString = s;
+        }else {
+            cacheString = cacheString + s;
+        }
+        if (!TextUtils.isEmpty(cacheString) && cacheString.length()>=18){
+            re = true;
+        }
+        LogUtil.i("re=" + re);
+        return re;
     }
 
     /* Call this from the main activity to send data to the remote device */
@@ -95,8 +118,11 @@ public class ConnectedThread extends Thread {
                     } catch (Exception e1) {
                         e1.printStackTrace();
                     }
-                    mHandler.obtainMessage(BluetoothUtils.MESSAGE_ERROR)
-                            .sendToTarget();
+                    LogUtil.i("mHandler=" + mHandler);
+                    if (null != mHandler){
+                        mHandler.obtainMessage(BluetoothUtils.MESSAGE_ERROR)
+                                .sendToTarget();
+                    }
                 }
             }
         }).start();

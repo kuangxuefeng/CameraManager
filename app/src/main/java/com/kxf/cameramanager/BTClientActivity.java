@@ -81,6 +81,7 @@ public class BTClientActivity extends BaseActivity implements OnClickListener {
         @Override
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
+            LogUtil.i("msg=" + msg);
             switch (msg.what) {
                 case BluetoothUtils.MESSAGE_READ:
                     String re = (String) msg.obj;
@@ -143,6 +144,8 @@ public class BTClientActivity extends BaseActivity implements OnClickListener {
                     String send = (String) msg.obj;
                     if (null != BluetoothUtils.btThreadInstance) {
                         BluetoothUtils.btThreadInstance.write(BluetoothUtils.getHexBytes(send));
+                    }else {
+                        handler.sendEmptyMessage(BluetoothUtils.MESSAGE_ERROR);
                     }
                     break;
                 case BluetoothUtils.MESSAGE_ERROR:
@@ -221,4 +224,14 @@ public class BTClientActivity extends BaseActivity implements OnClickListener {
         message.sendToTarget();
     }
 
+    @Override
+    public void finish() {
+        super.finish();
+        if (isWindowChanged) {
+            //回到主界面后检查是否已成功连接蓝牙设备
+            if (BluetoothUtils.btThreadInstance != null) {
+                BluetoothUtils.btThreadInstance.setMHandler(null);
+            }
+        }
+    }
 }

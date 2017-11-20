@@ -64,8 +64,8 @@ public class DevicesListActivity extends BaseActivity {
                         while (isAlive){
                             LogUtil.i("等待蓝牙接入");
                             BluetoothSocket so = btss.accept();
+                            LogUtil.i("蓝牙接入。。。");
                             if (null != so){
-                                LogUtil.i("蓝牙接入成功");
                                 showToast("蓝牙接入成功");
 
                                 BluetoothUtils.setBluetoothSocket(so);
@@ -73,6 +73,7 @@ public class DevicesListActivity extends BaseActivity {
                                 mActivity.runOnUiThread(new Runnable() {
                                     @Override
                                     public void run() {
+                                        LogUtil.i("连接成功，返回主界面。。。");
                                         progressbarSearchDevices.setVisibility(View.INVISIBLE);
                                         // 连接成功，返回主界面
                                         finish();

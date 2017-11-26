@@ -17,7 +17,7 @@ public class MySurfaceView extends SurfaceView implements
 	private Camera myCamera;
 	private MyCallBack myCallBack;
 	private boolean isBackCamera = true;
-	
+
 	public Camera getMyCamera(){
 		return myCamera;
 	}
@@ -54,11 +54,16 @@ public class MySurfaceView extends SurfaceView implements
 				changeCamera();//FindFrontCamera()!=-1
 			}else{
 				myCamera = Camera.open();// �������,���ܷ��ڹ��캯���У���Ȼ������ʾ����.
+				if (myCamera == null){
+					if (null!=myCallBack) {
+						myCallBack.mySurfaceErro("未找到摄像头！");
+					}
+					return;
+				}
 				try {
 					myCamera.setPreviewDisplay(holder);
-				} catch (IOException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
+				} catch (Exception e) {
+					LogUtil.e("myCamera.setPreviewDisplay(holder);", e);
 				}
 			}
 		}
@@ -71,6 +76,9 @@ public class MySurfaceView extends SurfaceView implements
 	public void surfaceChanged(SurfaceHolder holder, int format, int width,
 			int height) {
 		LogUtil.d("surfaceChanged");
+		if (myCamera == null){
+			return;
+		}
 		myCamera.startPreview();
 		if (null!=myCallBack) {
 			myCallBack.mySurfaceChanged(holder, format, width, height);
@@ -80,6 +88,9 @@ public class MySurfaceView extends SurfaceView implements
 	@Override
 	public void surfaceDestroyed(SurfaceHolder holder) {
 		LogUtil.d("surfaceDestroyed(SurfaceHolder holder)");
+		if (myCamera == null){
+			return;
+		}
 		myCamera.stopPreview();// ֹͣԤ��
 		myCamera.release();// �ͷ������Դ
 		myCamera = null;
@@ -89,6 +100,7 @@ public class MySurfaceView extends SurfaceView implements
 		void mySurfaceChanged(SurfaceHolder holder, int format, int width,
 							  int height);
 		void mySurfaceCreated(Camera myCamera);
+		void mySurfaceErro(String msg);
 	}
 	
 	@TargetApi(9)  

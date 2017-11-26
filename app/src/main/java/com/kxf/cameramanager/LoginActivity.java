@@ -127,12 +127,12 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
         int height = metric.heightPixels;  // 屏幕高度（像素）
         final float density = metric.density;  // 屏幕密度（0.75 / 1.0 / 1.5）
         int densityDpi = metric.densityDpi;  // 屏幕密度DPI（120 / 160 / 240）
-        LogUtil.d("height=" + height + ";width=" + width);
-        LogUtil.d("density=" + density + ";densityDpi=" + densityDpi);
+        LogUtil.i("height=" + height + ";width=" + width);
+        LogUtil.i("density=" + density + ";densityDpi=" + densityDpi);
         //屏幕宽度算法:屏幕宽度（像素）/屏幕密度
         screenWidth = (int) (width/density);//屏幕宽度(dp)
         screenHeight = (int)(height/density);//屏幕高度(dp)
-        LogUtil.d("screenWidth=" + screenWidth + ";screenHeight=" + screenHeight);
+        LogUtil.i("screenWidth=" + screenWidth + ";screenHeight=" + screenHeight);
         iv_bg = (ImageView) findViewById(R.id.iv_bg);
         ViewTreeObserver obs = iv_bg.getViewTreeObserver();
         obs.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
@@ -165,6 +165,10 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
                 LogUtil.d("lastLay.rightMargin=" + lastLay.rightMargin);
                 iv_user_last.setLayoutParams(lastLay);
                 iv_user_next.setLayoutParams(nextLay);
+                RelativeLayout.LayoutParams bgLay = (RelativeLayout.LayoutParams) iv_bg.getLayoutParams();
+                bgLay.bottomMargin = h/2 + 5;
+                LogUtil.i("bgLay.bottomMargin=" + bgLay.bottomMargin);
+                iv_bg.setLayoutParams(bgLay);
             }
         });
     }

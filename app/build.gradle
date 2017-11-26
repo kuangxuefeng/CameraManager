@@ -10,8 +10,8 @@ android {
         applicationId "com.kxf.cameramanager"
         minSdkVersion 16
         targetSdkVersion 23
-        versionCode 22
-        versionName "2.2"
+        versionCode 23
+        versionName "2.3"
         buildConfigField "String", "buileDateTime", getDateTime()
         buildConfigField "long", "BUILD_TIME_LONG", "${System.currentTimeMillis()}L"
         buildConfigField "boolean", "needCheckDate", "true"

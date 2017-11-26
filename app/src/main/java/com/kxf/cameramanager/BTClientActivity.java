@@ -5,9 +5,13 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.text.TextUtils;
+import android.util.DisplayMetrics;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.widget.Button;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.kxf.cameramanager.utils.LogUtil;
@@ -27,6 +31,97 @@ public class BTClientActivity extends BaseActivity implements OnClickListener {
         if (isWindowChanged) {
             setContentView(R.layout.activity_btclient); // 使用布局文件
             initView();
+            initViewSize();
+        }
+    }
+
+    private void initViewSize() {
+        DisplayMetrics metric = new DisplayMetrics();
+        getWindowManager().getDefaultDisplay().getMetrics(metric);
+        int width = metric.widthPixels;  // 屏幕宽度（像素）
+        int height = metric.heightPixels;  // 屏幕高度（像素）
+        final float density = metric.density;  // 屏幕密度（0.75 / 1.0 / 1.5）
+        int densityDpi = metric.densityDpi;  // 屏幕密度DPI（120 / 160 / 240）
+        LogUtil.i("height=" + height + ";width=" + width);
+        LogUtil.i("density=" + density + ";densityDpi=" + densityDpi);
+        //屏幕宽度算法:屏幕宽度（像素）/屏幕密度
+        final int screenWidth = (int) (width / density);//屏幕宽度(dp)
+        final int screenHeight = (int) (height / density);//屏幕高度(dp)
+        LogUtil.i("screenWidth=" + screenWidth + ";screenHeight=" + screenHeight);
+        ViewTreeObserver obs = btn_an1.getViewTreeObserver();
+        obs.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+            @Override
+            public void onGlobalLayout() {
+                btn_an1.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+                int h1 = btn_an1.getHeight() * screenHeight / 360;
+                LogUtil.i("h1=" + h1);
+
+                setHeightWeight(btn_an1, h1, h1);
+                setHeightWeight(btn_an2, h1, h1);
+                setHeightWeight(btn_an3, h1, h1);
+                setHeightWeight(btn_an4, h1, h1);
+
+                //btn_time_add, btn_time_red, btn_qian1_add, btn_qian1_red, btn_qian2_add, btn_qian2_red, btn_stop, btn_start, btn_back;
+                setHeightWeight(btn_time_add, h1, h1);
+                setHeightWeight(btn_time_red, h1, h1);
+                setHeightWeight(btn_qian1_add, h1, h1);
+                setHeightWeight(btn_qian1_red, h1, h1);
+                setHeightWeight(btn_qian2_add, h1, h1);
+                setHeightWeight(btn_qian2_red, h1, h1);
+
+                RelativeLayout.LayoutParams lay1 = (RelativeLayout.LayoutParams) btn_stop.getLayoutParams();
+                lay1.height = h1;
+                lay1.width = h1;
+                btn_stop.setLayoutParams(lay1);
+                RelativeLayout.LayoutParams lay2 = (RelativeLayout.LayoutParams) btn_start.getLayoutParams();
+                lay2.height = h1;
+                lay2.width = h1;
+                btn_start.setLayoutParams(lay2);
+                RelativeLayout.LayoutParams lay3 = (RelativeLayout.LayoutParams) btn_back.getLayoutParams();
+                lay3.height = h1;
+                lay3.width = h1;
+                btn_back.setLayoutParams(lay3);
+            }
+        });
+//        ViewTreeObserver obs1 = btn_stop.getViewTreeObserver();
+//        obs1.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+//            @Override
+//            public void onGlobalLayout() {
+//                btn_stop.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+//                int h1 = btn_stop.getHeight() * screenHeight / 360;
+//                LogUtil.i("btn_stop h1=" + h1);
+//                RelativeLayout.LayoutParams lay1 = (RelativeLayout.LayoutParams) btn_stop.getLayoutParams();
+//                lay1.height = h1;
+//                lay1.width = h1;
+//                btn_stop.setLayoutParams(lay1);
+////                setHeightWeightRl(btn_stop, h1, h1);
+////                setHeightWeightRl(btn_start, h1, h1);
+////                setHeightWeightRl(btn_back, h1, h1);
+//            }
+//        });
+    }
+
+    private void setHeightWeight(View v, int height, int weight){
+        try {
+            ViewGroup.LayoutParams lay = v.getLayoutParams();
+            lay.height = height;
+            lay.width = weight;
+            btn_an1.setLayoutParams(lay);
+            LogUtil.i("v.getId()=" + v.getId());
+        } catch (Exception e) {
+            LogUtil.e("v.getId()=" + v.getId(), e);
+        }
+    }
+
+    private void setHeightWeightRl(View v, int height, int weight){
+        try {
+            RelativeLayout.LayoutParams lay = (RelativeLayout.LayoutParams) v.getLayoutParams();
+            lay.height = height;
+            lay.width = weight;
+            btn_an1.setLayoutParams(lay);
+            LogUtil.i("v.getId()=" + v.getId());
+        } catch (Exception e) {
+            LogUtil.e("v.getId()=" + v.getId(), e);
         }
     }
 
@@ -118,13 +213,13 @@ public class BTClientActivity extends BaseActivity implements OnClickListener {
 //						btn_qian2_red.setEnabled(false);
 //					}
                     else if (isStartWith(re, "A155058200310100")) {
-                        tv_time_tv.setText(re.substring(re.length() - 2));
+                        tv_time_tv.setText(parseHex(re.substring(re.length() - 2)));
                     } else if (isStartWith(re, "A155058200320100")) {
-                        tv_qian1_tv.setText(re.substring(re.length() - 2));
+                        tv_qian1_tv.setText(parseHex(re.substring(re.length() - 2)));
                     } else if (isStartWith(re, "A155058200330100")) {
-                        tv_qian2_tv.setText(re.substring(re.length() - 2));
+                        tv_qian2_tv.setText(parseHex(re.substring(re.length() - 2)));
                     } else if (isStartWith(re, "A155058200340100")) {
-                        tv_bom_tv.setText(re.substring(re.length() - 2));
+                        tv_bom_tv.setText(parseHex(re.substring(re.length() - 2)));
                     } else if ("A15504800100140002".equals(re)) {
                         btn_start.setSelected(true);
                         btn_start.setEnabled(false);
@@ -233,5 +328,16 @@ public class BTClientActivity extends BaseActivity implements OnClickListener {
                 BluetoothUtils.btThreadInstance.setMHandler(null);
             }
         }
+    }
+
+    private String parseHex(String hex){
+        String re = "00";
+        try {
+            int a = Integer.parseInt(hex, 16);
+            re = String.format("%02d", a);
+        } catch (Exception e) {
+            LogUtil.e("parseHex(String hex) hex=" + hex, e);
+        }
+        return re;
     }
 }

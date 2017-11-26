@@ -146,6 +146,16 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
                 }
                 MainActivity.this.myCamera = myCamera;
             }
+
+            @Override
+            public void mySurfaceErro(String msg) {
+                showDialog(msg, "确定", new Runnable() {
+                    @Override
+                    public void run() {
+                        mActivity.finish();
+                    }
+                }, null, null);
+            }
         });
     }
 

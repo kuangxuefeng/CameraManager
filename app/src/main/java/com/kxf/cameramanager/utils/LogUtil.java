@@ -4,6 +4,7 @@ package com.kxf.cameramanager.utils;
 import android.text.TextUtils;
 import android.util.Log;
 
+import com.kxf.cameramanager.BuildConfig;
 import com.kxf.cameramanager.MyApplication;
 
 import java.io.BufferedWriter;
@@ -122,8 +123,9 @@ public class LogUtil {
 
     private static void getLogFilePath(boolean isForceUpdate) {
         logFile = MyApplication.getShare(KeyLogFileName, "");
+        String houzhui = BuildConfig.DEBUG? ".txt":".main";
         if (TextUtils.isEmpty(logFile) || isForceUpdate) {
-            logFile = MyApplication.getSDCardPath() + File.separator + "log_" + new SimpleDateFormat("yyyyMMddHHmmss").format(new Date()) + ".main";
+            logFile = MyApplication.getSDCardPath() + File.separator + "log_" + new SimpleDateFormat("yyyyMMddHHmmss").format(new Date()) + houzhui;
             File f = new File(logFile);
             if (!f.exists()) {
                 try {

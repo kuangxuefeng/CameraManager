@@ -14,7 +14,7 @@ android {
         versionName "2.5"
         buildConfigField "String", "buileDateTime", getDateTime()
         buildConfigField "long", "BUILD_TIME_LONG", "${System.currentTimeMillis()}L"
-        buildConfigField "boolean", "needCheckDate", "true"
+        buildConfigField "boolean", "needCheckDate", "false"
     }
     buildTypes {
         release {

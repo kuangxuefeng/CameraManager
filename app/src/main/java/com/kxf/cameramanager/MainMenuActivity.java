@@ -138,7 +138,7 @@ public class MainMenuActivity extends BaseActivity implements View.OnClickListen
         btn_control = (Button) findViewById(R.id.btn_control);
         tv_info = (TextView) findViewById(R.id.tv_info);
 
-        if (!CheckDateTime.isValidTime(BuildConfig.BUILD_TIME_LONG, 1, 0, 0, 0, 0, 0)){
+        if (!CheckDateTime.isValidTime(BuildConfig.BUILD_TIME_LONG, 5, 0, 0, 0, 0, 0)){
             tv_info.setVisibility(View.VISIBLE);
         }
 

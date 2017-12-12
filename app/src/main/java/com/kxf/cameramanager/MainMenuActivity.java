@@ -155,6 +155,9 @@ public class MainMenuActivity extends BaseActivity implements View.OnClickListen
             case R.id.btn_checkup:
                 intent = new Intent(this, LoginActivity.class);
                 startActivity(intent);
+                if (BluetoothUtils.btThreadInstance != null) {
+                    BluetoothUtils.btThreadInstance.setMHandler(null);
+                }
                 break;
             case R.id.btn_control:
 //                intent = new Intent(this, BTClientActivity.class);
